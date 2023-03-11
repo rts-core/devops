@@ -14,7 +14,6 @@
       name: "K8S_JOIN_COMMAND"
       cmd: "{{ kubeadmjoin.stdout }}"
 
-
 # todo check if /etc/kubernetes/pki/ca.crt already exists to skip
 - name: Join Workers
   hosts: 'k8sworkers'
