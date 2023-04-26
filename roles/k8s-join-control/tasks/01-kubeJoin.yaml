@@ -1,0 +1,32 @@
+# todo check if /etc/kubernetes/pki/ca.crt already exists to skip
+
+- name: Open Firewall Ports (1/4)
+  ansible.posix.firewalld:
+   port: 6443/tcp
+   permanent: true
+   immediate: true
+   state: enabled
+- name: Open Firewall Ports (2/4)
+  ansible.posix.firewalld:
+   port: 10250/tcp
+   permanent: true
+   immediate: true
+   state: enabled
+- name: Open Firewall Ports (3/4)
+  ansible.posix.firewalld:
+   port: 2379/tcp
+   permanent: true
+   immediate: true
+   state: enabled
+- name: Open Firewall Ports (4/4) [Flannel]
+  ansible.posix.firewalld:
+   port: 8472/udp
+   permanent: true
+   immediate: true
+   state: enabled
+
+# - name: Join K8s
+#   ansible.builtin.command:
+#    cmd: "{{ hostvars['K8S_JOIN_CONTROL_COMMAND']['cmd'] }} --apiserver-advertise-address={{ ansible_ssh_host }}"
+#    creates: /etc/kubernetes/pki/ca.crt
+#   changed_when: true

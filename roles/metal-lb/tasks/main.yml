@@ -1,0 +1,27 @@
+---
+# tasks file for metal-lb
+- name: Add helm repo
+  kubernetes.core.helm_repository:
+    name: metallb
+    repo_url: https://metallb.github.io/metallb
+
+- name: Create a metallb namespace
+  kubernetes.core.k8s:
+    name: metallb
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Install metal-lb
+  kubernetes.core.helm:
+    name: metallb
+    namespace: metallb
+    chart_ref: metallb/metallb
+    chart_version: "{{metallb_version}}"
+  # environment:
+  #   KUBECONFIG: "/home/{{user}}/.kube/config"
+
+- name: Apply Addresspool
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{addresspool}}"

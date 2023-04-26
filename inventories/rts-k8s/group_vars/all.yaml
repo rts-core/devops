@@ -1,0 +1,48 @@
+user: rts-k8s
+remote_user: rts-k8s
+
+# Cri-O
+stable_repo: |
+  [devel_kubic_libcontainers_stable]
+  name=Stable Releases of Upstream github.com/containers packages (CentOS_8_Stream)
+  type=rpm-md
+  baseurl=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8_Stream/
+  gpgcheck=1
+  gpgkey=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8_Stream/repodata/repomd.xml.key
+  exclude=cri-o containernetworking-plugins
+  enabled=1
+crio_repo: |
+  [devel_kubic_libcontainers_stable_cri-o_1.26]
+  name=devel:kubic:libcontainers:stable:cri-o:1.26 (CentOS_8_Stream)
+  type=rpm-md
+  baseurl=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.26/CentOS_8_Stream/
+  gpgcheck=1
+  gpgkey=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.26/CentOS_8_Stream/repodata/repomd.xml.key
+  exclude=cri-o containernetworking-plugins
+  enabled=1
+crio_version: 1.26*
+
+# Kube
+kube_repo: |
+  [kubernetes]
+  name=Kubernetes
+  baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+  enabled=1
+  gpgcheck=1
+  gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+  exclude=kubelet kubeadm kubectl
+kube_version: 1.26*
+
+# Flannel
+flannel_url: https://github.com/flannel-io/flannel/releases/download/v0.21.4/kube-flannel.yml
+
+# Calico
+calico_version: 3.25.1
+calico_value_file: './inventories/rts-k8s/calico_values.yaml'
+
+# Helm
+helm_version: 3.11.3
+
+# Metal-lb
+metallb_version: 0.13.9
+addresspool: "{{ lookup('file', '../addresspool.yaml') }}"

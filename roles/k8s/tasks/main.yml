@@ -1,0 +1,6 @@
+---
+# tasks file for k8s
+
+- import_tasks: 01-prepare.yaml
+- import_tasks: 02-installCrio.yaml
+- import_tasks: 03-installK8s.yaml

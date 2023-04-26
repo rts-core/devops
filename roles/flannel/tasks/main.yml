@@ -1,0 +1,17 @@
+---
+# tasks file for flannel
+- name: Download metrics-server manifest to the cluster.
+  ansible.builtin.get_url:
+    url: "{{flannel_url}}"
+    dest: ~/flannel.yaml
+    mode: '0664'
+
+- name: Apply metrics-server manifest to the cluster.
+  kubernetes.core.k8s:
+    state: present
+    src: ~/flannel.yaml
+
+- name: Remove yaml
+  ansible.builtin.file:
+    path: ~/flannel.yaml
+    state: absent

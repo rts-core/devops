@@ -48,6 +48,7 @@
           exclude=cri-o containernetworking-plugins
           enabled=1
       mode: '0644'
+      follow: yes
      changed_when: true
    - name: Install CRI-O (2/3) - Add CRI-O repo
      ansible.builtin.copy:
@@ -62,6 +63,7 @@
           exclude=cri-o containernetworking-plugins
           enabled=1
       mode: '0644'
+      follow: yes
      changed_when: true
    - name: Install CRI-O (3/3) - YUM Install
      ansible.builtin.yum:
