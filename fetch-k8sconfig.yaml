@@ -1,0 +1,7 @@
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: fetch-kubeconfig
+      message: Downloading kubeconfig
+      # become: true
+      # become_method: sudo

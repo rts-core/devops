@@ -1,4 +1,11 @@
+- name: register status of /etc/kubernetes/pki/ca.crt
+  hosts: 'k8sworkers'
+  stat:
+    path: /etc/kubernetes/pki/ca.crt
+  register: k8s_join_file
+
 - name: Get kubeadm Join String
+  when: "not k8s_join_file.stat.exists"
   hosts: 'k8scontrollers'
   remote_user: kube
   become: true
@@ -16,6 +23,7 @@
 
 # todo check if /etc/kubernetes/pki/ca.crt already exists to skip
 - name: Join Workers
+  when: "not k8s_join_file.stat.exists"
   hosts: 'k8sworkers'
   remote_user: kube
   become: true

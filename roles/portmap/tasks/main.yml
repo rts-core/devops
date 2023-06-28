@@ -1,0 +1,29 @@
+---
+# tasks file for portmap
+- name: register status of /opt/cni/bin/portmap
+  stat:
+    path: /opt/cni/bin/portmap
+  register: portmap_file
+
+- name: Create bin dir
+  when: "not portmap_file.stat.exists"
+  ansible.builtin.file:
+    path: /opt/cni/bin
+    state: directory
+    mode: '0755'
+- name: Download portmap
+  when: "not portmap_file.stat.exists"
+  ansible.builtin.get_url:
+    url: "{{portmap_url}}"
+    dest: /home/{{user}}/portmap.tgz
+    mode: '0664'
+- name: Extract
+  when: "not portmap_file.stat.exists"
+  ansible.builtin.unarchive:
+    src: /home/{{user}}/portmap.tgz
+    dest: /opt/cni/bin
+    remote_src: yes
+- name: Remove tgz
+  ansible.builtin.file:
+    path: /home/{{user}}/portmap.tgz
+    state: absent

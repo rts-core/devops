@@ -1,0 +1,17 @@
+# Metallb
+
+- hosts: k8sworkers, k8scontrollers
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/metallb-ports
+      message: Opening MetalLB Ports
+      become: true
+      become_method: sudo
+
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/metallb
+      message: Installing MetalLB
+      # become: true
+      # become_method: sudo

@@ -36,13 +36,43 @@ kube_version: 1.26*
 # Flannel
 flannel_url: https://github.com/flannel-io/flannel/releases/download/v0.21.4/kube-flannel.yml
 
-# Calico
-calico_version: 3.25.1
-calico_value_file: './inventories/rts-k8s/calico_values.yaml'
+# Portmap
+portmap_url: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz
 
 # Helm
 helm_version: 3.11.3
 
 # Metal-lb
 metallb_version: 0.13.9
-addresspool: "{{ lookup('file', '../addresspool.yaml') }}"
+addresspool: |
+  apiVersion: metallb.io/v1beta1
+  kind: IPAddressPool
+  metadata:
+    name: metallbaddresspool
+    namespace: metallb
+  spec:
+    addresses:
+    - 192.168.56.150-192.168.56.200
+  ---
+  apiVersion: metallb.io/v1beta1
+  kind: L2Advertisement
+  metadata:
+    name: l2advertisement
+    namespace: metallb
+  spec:
+    ipAddressPools:
+    - metallbaddresspool
+
+# nfs provisioner
+nfsServerIp: "10.0.0.30"
+nfsVolumePath: "/volume1/appdata"
+nfsClass: |
+  apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: managed-nfs-storage
+  provisioner: k8s-sigs.io/nfs-subdir-external-provisioner # or choose another name, must match deployment's env PROVISIONER_NAME'
+  parameters:
+    archiveOnDelete: "false"
+    onDelete: "retain"
+    pathPattern: "${.PVC.namespace}-${.PVC.name}"

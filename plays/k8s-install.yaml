@@ -1,8 +1,12 @@
 #K8s
 
-- hosts: all
+- hosts: k8sworkers, k8scontrollers
   remote_user: "{{user}}"
   roles:
+    - role: ../roles/portmap
+      message: Installing portmap
+      become: true
+      become_method: sudo
     - role: ../roles/k8s
       message: Installing controllers
       become: true
@@ -13,6 +17,38 @@
   roles:
     - role: ../roles/k8s-init
       message: Initializing K8s
+      become: true
+      become_method: sudo
+
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/fetch-kubeconfig
+      message: Downloading kubeconfig
+      # become: true
+      # become_method: sudo
+
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/helm
+      message: Installing helm
+      become: true
+      become_method: sudo
+
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/flannel
+      message: Installing Flannel CNI
+      #become: true
+      #become_method: sudo
+
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/k8s-get-join-token
+      message: Getting join token
       become: true
       become_method: sudo
 

@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: k8sworkers, k8scontrollers
   roles:
     - role: common
       message: Setting up common settings.

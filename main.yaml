@@ -1,25 +1,11 @@
 - import_playbook: ./plays/k8s-install.yaml
 
-- hosts: k8scontrollers[0]
-  remote_user: "{{user}}"
-  roles:
-    - role: helm
-      message: Installing helm
-      become: true
-      become_method: sudo
-
-- hosts: k8scontrollers[0]
-  remote_user: "{{user}}"
-  roles:
-    - role: flannel
-      message: Installing Flannel CNI
-      become: true
-      become_method: sudo
+- import_playbook: ./plays/metallb-install.yaml
 
 # - hosts: k8scontrollers[0]
 #   remote_user: "{{user}}"
 #   roles:
-#     - role: metal-lb
-#       message: Installing metal-lb
+#     - role: ../roles/nfs-provisioner
+#       message: Installing NFS Provisioner
 #       become: true
 #       become_method: sudo
