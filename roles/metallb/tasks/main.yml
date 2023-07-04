@@ -25,6 +25,9 @@
     namespace: metallb
     chart_ref: metallb/metallb
     chart_version: "{{metallb_version}}"
+    set_values:
+      - value: crds.validationFailurePolicy=Ignore
+        valueType: string
 
 - name: Apply Addresspool
   kubernetes.core.k8s:
@@ -32,3 +35,7 @@
     definition: "{{addresspool}}"
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
+
+- name: Wait 3 minute for safety
+  ansible.builtin.pause:
+  minutes: 3

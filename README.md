@@ -44,6 +44,7 @@ ansible-playbook -i inventories/<Your inventory name> join.yaml
 
 ansible-playbook -kK -i inventories/rts-k8s init.yaml
 ansible-playbook -i inventories/rts-k8s main.yaml
+ansible-playbook -i inventories/rts-k8s debug.yaml
 ansible-playbook -i inventories/rts-k8s reset.yaml
 ansible-playbook -i inventories/rts-k8s fetch-k8sconfig.yaml
 

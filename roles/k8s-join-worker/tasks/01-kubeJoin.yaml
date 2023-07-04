@@ -38,4 +38,7 @@
    cmd: "{{ hostvars['K8S_JOIN_COMMAND']['cmd'] }}"
    creates: /etc/kubernetes/pki/ca.crt
   changed_when: true
-  
+
+- name: Wait 5 minute for safety (Network has to stand up)
+  ansible.builtin.pause:
+  minutes: 5

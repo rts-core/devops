@@ -5,6 +5,12 @@
     path: /opt/cni/bin/portmap
   register: portmap_file
 
+- name: Install unzip
+  ansible.builtin.yum:
+    name:
+      - unzip
+      - tar
+    state: present
 - name: Create bin dir
   when: "not portmap_file.stat.exists"
   ansible.builtin.file:
