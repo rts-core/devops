@@ -41,4 +41,4 @@
 
 - name: Wait 5 minute for safety (Network has to stand up)
   ansible.builtin.pause:
-  minutes: 5
+    minutes: 5

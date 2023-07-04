@@ -1,11 +1,11 @@
 k8scontrollers:
   hosts:
     control01:
-      ansible_host: 10.0.0.249
+      ansible_host: 10.0.0.178
 
 k8sworkers:
   hosts:
     worker01:
-      ansible_host: 10.0.0.231
+      ansible_host: 10.0.0.107
     worker02:
-      ansible_host: 10.0.0.183
+      ansible_host: 10.0.0.103

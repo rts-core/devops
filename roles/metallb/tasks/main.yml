@@ -38,4 +38,4 @@
 
 - name: Wait 3 minute for safety
   ansible.builtin.pause:
-  minutes: 3
+    minutes: 3
