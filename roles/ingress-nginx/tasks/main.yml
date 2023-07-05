@@ -1,0 +1,37 @@
+---
+- name: Create a ingress namespace
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      api_version: v1
+      kind: Namespace
+      metadata:
+        name: ingress-nginx
+        labels:
+          pod-security.kubernetes.io/enforce: privileged
+          pod-security.kubernetes.io/audit: privileged
+          pod-security.kubernetes.io/warn: privileged
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+
+- name: Install ingress
+  kubernetes.core.helm:
+    name: ingress-nginx
+    namespace: ingress-nginx
+    chart_ref: ingress-nginx
+    chart_repo_url: https://kubernetes.github.io/ingress-nginx
+    chart_version: "{{ingressNginxChartVerision}}"
+    set_values:
+      - value: crds.validationFailurePolicy=Ignore
+        valueType: string
+
+- name: Remove auth hook
+  kubernetes.core.k8s:
+    state: absent
+    api_version: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: ingress-nginx-admission
+
+- name: Wait for safety
+  ansible.builtin.pause:
+   seconds: 120

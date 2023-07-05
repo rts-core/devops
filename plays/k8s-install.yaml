@@ -39,7 +39,7 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/flannel
+    - role: ../roles/new-flannel
       message: Installing Flannel CNI
       #become: true
       #become_method: sudo

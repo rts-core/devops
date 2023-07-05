@@ -26,6 +26,8 @@
     chart_ref: metallb/metallb
     chart_version: "{{metallb_version}}"
     set_values:
+      - value: controller.admissionWebhooks.enabled=false
+        valueType: string
       - value: crds.validationFailurePolicy=Ignore
         valueType: string
 

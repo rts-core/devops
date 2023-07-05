@@ -35,6 +35,7 @@ kube_version: 1.26*
 
 # Flannel
 flannel_url: https://github.com/flannel-io/flannel/releases/download/v0.21.4/kube-flannel.yml
+flannelChartVersion: 0.22.0
 
 # Portmap
 portmap_url: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz
@@ -78,3 +79,6 @@ nfsClass: |
     archiveOnDelete: "false"
     onDelete: "retain"
     pathPattern: "${.PVC.namespace}-${.PVC.name}"
+
+# ingress-nginx
+ingressNginxChartVerision: "4.7.1"
