@@ -1,6 +1,0 @@
-- import_playbook: 01-createUser.yaml
-- import_playbook: 02-prepare.yaml
-- import_playbook: 03-installCrio.yaml
-- import_playbook: 04-installK8s.yaml
-- import_playbook: 05-kubeadmInit.yaml
-- import_playbook: 06-kubeJoin.yaml
