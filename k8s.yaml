@@ -1,3 +1,7 @@
+- import_playbook: ./plays/k8s-install.yaml
+
+- import_playbook: ./plays/metallb-install.yaml
+
 - hosts: k8sworkers, k8scontrollers
   remote_user: "{{user}}"
   roles:
