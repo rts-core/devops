@@ -1,0 +1,6 @@
+---
+# tasks file for uncordon-node
+- name: Uncordon Node {{node}}
+  ansible.builtin.command:
+   cmd: kubectl uncordon {{node}}
+  changed_when: true

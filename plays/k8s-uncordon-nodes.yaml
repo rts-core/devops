@@ -1,0 +1,8 @@
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  tasks:
+    - ansible.builtin.include_role: 
+        name: ../roles/uncordon-node
+      vars:
+        node: "{{ item }}"
+      with_items: "{{ groups['k8sworkers'] }}"

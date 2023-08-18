@@ -1,0 +1,5 @@
+---
+# tasks file for shutdown-server
+
+- name: Shutdown Server
+  community.general.shutdown:

@@ -82,3 +82,5 @@ nfsClass: |
 
 # ingress-nginx
 ingressNginxChartVerision: "4.7.1"
+internalIngressName: internal
+externalIngressName: external

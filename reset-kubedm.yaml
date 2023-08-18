@@ -1,7 +1,0 @@
-- hosts: k8sworkers, k8scontrollers
-  remote_user: "{{user}}"
-  roles:
-    - role: k8s-reset
-      message: Reset the Kubeadm back to no nodes joined.
-      become: yes
-      become_method: sudo

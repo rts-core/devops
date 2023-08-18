@@ -6,7 +6,7 @@
       api_version: v1
       kind: Namespace
       metadata:
-        name: ingress-nginx
+        name: "{{ ingressNamespace }}"
         labels:
           pod-security.kubernetes.io/enforce: privileged
           pod-security.kubernetes.io/audit: privileged
@@ -14,16 +14,24 @@
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
 
-- name: Install ingress
+- name: Install external ingress
   kubernetes.core.helm:
-    name: ingress-nginx
-    namespace: ingress-nginx
+    name: "{{ ingressName }}"
+    namespace: "{{ ingressNamespace }}"
     chart_ref: ingress-nginx
     chart_repo_url: https://kubernetes.github.io/ingress-nginx
     chart_version: "{{ingressNginxChartVerision}}"
     set_values:
       - value: crds.validationFailurePolicy=Ignore
         valueType: string
+      - value: controller.ingressClass={{ ingressClass }}
+        valueType: string
+      - value: controller.ingressClassResource.name={{ ingressClass }}
+        valueType: string
+      - value: controller.ingressClassResource.controllerValue=k8s.io/{{ ingressClass }}
+        valueType: string
+      - value: controller.ingressClassResource.default=false
+        valueType: boolean
 
 - name: Remove auth hook
   kubernetes.core.k8s:

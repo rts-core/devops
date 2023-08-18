@@ -1,0 +1,6 @@
+---
+# tasks file for drain-node
+- name: Drain Node {{ node }}
+  ansible.builtin.command:
+   cmd: kubectl drain {{ node }} --ignore-daemonsets
+  changed_when: true

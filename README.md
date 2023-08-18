@@ -11,6 +11,8 @@ To run a fresh installation:
 
 1. Update/Create a hosts file to fit the currently setup of the systems in it's own inventory directory.
 
+2. SSH to your servers to ensure you have the fingerprints accepted as known.
+
 2. Run the following command to initialize a user and ssh for auth.
 
 ``` shell
@@ -42,11 +44,11 @@ ansible-playbook -i inventories/<Your inventory name> join.yaml
 ## todo Update
 
 
-ansible-playbook -kK -i inventories/rts-k8s init.yaml
-ansible-playbook -i inventories/rts-k8s k8s.yaml
-ansible-playbook -i inventories/rts-k8s debug.yaml
-ansible-playbook -i inventories/rts-k8s reset-kubedm.yaml
-ansible-playbook -i inventories/rts-k8s fetch-k8sconfig.yaml
+ansible-playbook -kK -i inventories/rts-k8s ./plays/init.yaml
+ansible-playbook -i inventories/rts-k8s ./plays/devops-stack-install.yaml
+ansible-playbook -i inventories/rts-k8s ./plays/debug.yaml
+ansible-playbook -i inventories/rts-k8s ./plays/reset-kubedm.yaml
+ansible-playbook -i inventories/rts-k8s ./plays/fetch-k8sconfig.yaml
 
 kubeadm join 192.168.56.104:6443 --token lhxxbh.efq6sb6zmh62ckjc --discovery-token-ca-cert-hash sha256:41a8aa76d4c53c78f8fea1c815fc97e26873f729080783205b183f6acf3cd1ae --control-plane --certificate-key c881fc1701030ccb26b0ce08005f3a773c109b705c5213caf7c65cccfaff2ca9 --apiserver-advertise-address=192.168.56.103
 

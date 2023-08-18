@@ -1,0 +1,25 @@
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  tasks:
+    - ansible.builtin.include_role: 
+        name: ../roles/drain-node
+      vars:
+        node: "{{ item }}"
+      with_items: "{{ groups['k8sworkers'] }}"
+
+- hosts: k8sworkers
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/shutdown-server
+      message: Shutting down server
+      become: true
+      become_method: sudo
+
+
+- hosts: k8scontrollers
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/shutdown-server
+      message: Shutting down server
+      become: true
+      become_method: sudo
