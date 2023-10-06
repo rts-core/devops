@@ -1,0 +1,78 @@
+---
+# tasks file for flannel-firewall
+# - name: Open Firewall Ports [UDP]
+#   ansible.posix.firewalld:
+#    port: 8285/udp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [VXLAN]
+#   ansible.posix.firewalld:
+#    port: 8472/udp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+  
+# - name: Firewall masquerade On
+#   ansible.posix.firewalld:
+#     masquerade: true
+#     state: enabled
+#     zone: public
+#     permanent: true
+#     immediate: true
+
+# - name: IP Tables to fix CoreDNS issue
+#   ansible.builtin.iptables:
+#     chain: INPUT
+#     protocol: tcp
+#     destination_port: 6443
+#     ctstate: NEW
+#     jump: ACCEPT
+    
+# - name: IP Tables to fix CoreDNS issue
+#   ansible.builtin.iptables:
+#     chain: INPUT
+#     protocol: tcp
+#     destination_port: 6443
+#     ctstate: NEW
+#     jump: ACCEPT
+
+# - name: IP Tables to fix CoreDNS issue
+#   ansible.builtin.iptables:
+#     chain: INPUT
+#     protocol: tcp
+#     destination_port: 443
+#     ctstate: NEW
+#     jump: ACCEPT
+
+# - name: IP Tables to fix CoreDNS issue
+#   ansible.builtin.iptables:
+#     chain: INPUT
+#     protocol: udp
+#     destination_port: 53
+#     ctstate: NEW
+#     jump: ACCEPT
+
+# - name: IP Tables to fix CoreDNS issue
+#   ansible.builtin.iptables:
+#     chain: FORWARD
+#     protocol: tcp
+#     destination_port: 6443
+#     ctstate: NEW
+#     jump: ACCEPT
+
+# - name: IP Tables to fix CoreDNS issue
+#   ansible.builtin.iptables:
+#     chain: FORWARD
+#     protocol: tcp
+#     destination_port: 443
+#     ctstate: NEW
+#     jump: ACCEPT
+
+# - name: IP Tables to fix CoreDNS issue
+#   ansible.builtin.iptables:
+#     chain: INPUT
+#     protocol: udp
+#     destination_port: 53
+#     ctstate: NEW
+#     jump: ACCEPT

@@ -44,11 +44,26 @@ ansible-playbook -i inventories/<Your inventory name> join.yaml
 ## todo Update
 
 
+
+## Todo List:
+
+- CA Janitor
+- Vault
+- ArgoCD
+- Github Action Workers
+- Artifactory?
+- simplify roles (1 yum role, no crds in settings, etc)
+
+
+
 ansible-playbook -kK -i inventories/rts-k8s ./plays/init.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/devops-stack-install.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/debug.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/reset-kubedm.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/fetch-k8sconfig.yaml
+
+get expiry: openssl x509 -enddate -noout -in ca.crt
+check if will expire within week: openssl x509 -checkend 604800 -noout -in ca.crt
 
 kubeadm join 192.168.56.104:6443 --token lhxxbh.efq6sb6zmh62ckjc --discovery-token-ca-cert-hash sha256:41a8aa76d4c53c78f8fea1c815fc97e26873f729080783205b183f6acf3cd1ae --control-plane --certificate-key c881fc1701030ccb26b0ce08005f3a773c109b705c5213caf7c65cccfaff2ca9 --apiserver-advertise-address=192.168.56.103
 

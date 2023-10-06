@@ -18,26 +18,27 @@
     - role: ../roles/nfs-provisioner
       message: Installing NFS Provisioner
 
-# Nginx Ingress
-- hosts: k8sworkers, k8scontrollers
-  remote_user: "{{user}}"
-  roles:
-    - role: ../roles/ingress-nginx-ports
-      message: Opening Ports for Ingress NGINX
-      become: true
-      become_method: sudo
+# Certificate Manager
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/ingress-nginx
-      message: Installing External Ingress NGINX
+    - role: ../roles/jq
+      message: Install jq
+      become: true
+      become_method: sudo
+    - role: ../roles/cert-manager
+      message: Installing Cert-Manager
       vars:
-        ingressName: ingress-nginx-{{externalIngressName}}
-        ingressNamespace: ingress-nginx-{{externalIngressName}}
-        ingressClass: nginx-{{externalIngressName}}
-    - role: ../roles/ingress-nginx
-      message: Installing Internal Ingress NGINX
-      vars:
-        ingressName: ingress-nginx-{{internalIngressName}}
-        ingressNamespace: ingress-nginx-{{internalIngressName}}
-        ingressClass: nginx-{{internalIngressName}}
+        version: "{{certManagerVersion}}"
+    - role: ../roles/ca-create
+      message: Creating self signed certificate authority
+    - role: ../roles/self-signed-issuer-create
+      message: Creating self signed cert-manager issuer
+
+- hosts: k8scontrollers, k8sworkers
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/ca-trust
+      message: Trusting CA Certificate
+      become: true
+      become_method: sudo

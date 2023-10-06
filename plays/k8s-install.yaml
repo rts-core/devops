@@ -3,6 +3,10 @@
 - hosts: k8sworkers, k8scontrollers
   remote_user: "{{user}}"
   roles:
+    - role: ../roles/k8s-firewall
+      message: Opening K8s firewall ports
+      become: true
+      become_method: sudo
     - role: ../roles/portmap
       message: Installing portmap
       become: true
@@ -36,13 +40,37 @@
       become: true
       become_method: sudo
 
+# Calico
+- hosts: k8scontrollers, k8sworkers
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/calico-firewall
+      message: Modifying Firewall Rules for Calico
+      become: true
+      become_method: sudo
+
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/new-flannel
-      message: Installing Flannel CNI
-      #become: true
-      #become_method: sudo
+    - role: ../roles/calico
+      message: Install Calico
+
+# # Flannel
+# - hosts: k8scontrollers, k8sworkers
+#   remote_user: "{{user}}"
+#   roles:
+#     - role: ../roles/flannel-firewall
+#       message: Modifying Firewall Rules for Flannel
+#       become: true
+#       become_method: sudo
+
+# - hosts: k8scontrollers[0]
+#   remote_user: "{{user}}"
+#   roles:
+#     - role: ../roles/flannel
+#       message: Install Flannel
+#       become: true
+#       become_method: sudo
 
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
@@ -68,3 +96,9 @@
       message: Joining K8s network
       become: true
       become_method: sudo
+
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/coredns-restart
+      message: Restarting kube-dns app

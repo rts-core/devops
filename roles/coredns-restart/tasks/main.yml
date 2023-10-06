@@ -1,0 +1,13 @@
+---
+# tasks file for coredns-restart
+
+- name: Restart all coredns pods
+  ansible.builtin.shell:
+    cmd: "kubectl delete pods -n kube-system -l k8s-app=kube-dns"
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+
+- name: Wait 2 minute for safety (DNS has to stand up)
+  ansible.builtin.pause:
+    minutes: 2

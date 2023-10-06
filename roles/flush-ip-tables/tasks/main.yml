@@ -1,0 +1,11 @@
+---
+# tasks file for flush-ip-tables
+
+- name: Flush IP Tables
+  ansible.builtin.iptables:
+    flush: yes
+
+- name: Flush NAT
+  ansible.builtin.iptables:
+    table: nat
+    flush: yes

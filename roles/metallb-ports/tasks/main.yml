@@ -1,14 +1,14 @@
 ---
 # tasks file for metallb-ports
-- name: Open Firewall Ports (1/2)
-  ansible.posix.firewalld:
-   port: 7946/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (2/2)
-  ansible.posix.firewalld:
-   port: 443/tcp
-   permanent: true
-   immediate: true
-   state: enabled
+# - name: Open Firewall Ports (1/2)
+#   ansible.posix.firewalld:
+#    port: 7946/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (2/2)
+#   ansible.posix.firewalld:
+#    port: 443/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled

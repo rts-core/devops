@@ -1,0 +1,8 @@
+---
+# tasks file for nano
+- name: Install NANO
+  ansible.builtin.yum:
+    name:
+      - nano
+    disable_excludes: all
+    state: present

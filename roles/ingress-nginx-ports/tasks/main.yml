@@ -1,116 +1,116 @@
 ---
 # tasks file for ingress-nginx-ports
-- name: Open Firewall Ports (1/2)
-  ansible.posix.firewalld:
-   port: 80/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (2/2)
-  ansible.posix.firewalld:
-   port: 443/tcp
-   permanent: true
-   immediate: true
-   state: enabled
+# - name: Open Firewall Ports (1/2)
+#   ansible.posix.firewalld:
+#    port: 80/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (2/2)
+#   ansible.posix.firewalld:
+#    port: 443/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
 
-- name: Open Firewall Ports (1/8) [Kubernetes API server]
-  ansible.posix.firewalld:
-   port: 6443/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (2/8) [Kubelet API]
-  ansible.posix.firewalld:
-   port: 10250/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (3/8) [etcd server client API]
-  ansible.posix.firewalld:
-   port: 2379/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (4/8) [etcd server client API]
-  ansible.posix.firewalld:
-   port: 2380/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (5/8) [kube-scheduler]
-  ansible.posix.firewalld:
-   port: 10251/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (5/8) [kube-scheduler]
-  ansible.posix.firewalld:
-   port: 10255/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (6/8) [kube-controller-manager]
-  ansible.posix.firewalld:
-   port: 10252/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (7/8) [Flannel]
-  ansible.posix.firewalld:
-   port: 8472/udp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (8/8) [Flannel]
-  ansible.posix.firewalld:
-   port: 8285/udp
-   permanent: true
-   immediate: true
-   state: enabled
+# - name: Open Firewall Ports (1/8) [Kubernetes API server]
+#   ansible.posix.firewalld:
+#    port: 6443/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (2/8) [Kubelet API]
+#   ansible.posix.firewalld:
+#    port: 10250/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (3/8) [etcd server client API]
+#   ansible.posix.firewalld:
+#    port: 2379/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (4/8) [etcd server client API]
+#   ansible.posix.firewalld:
+#    port: 2380/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (5/8) [kube-scheduler]
+#   ansible.posix.firewalld:
+#    port: 10251/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (5/8) [kube-scheduler]
+#   ansible.posix.firewalld:
+#    port: 10255/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (6/8) [kube-controller-manager]
+#   ansible.posix.firewalld:
+#    port: 10252/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (7/8) [Flannel]
+#   ansible.posix.firewalld:
+#    port: 8472/udp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (8/8) [Flannel]
+#   ansible.posix.firewalld:
+#    port: 8285/udp
+#    permanent: true
+#    immediate: true
+#    state: enabled
    
-- name: Open Firewall Ports (8/8) [Flannel]
-  ansible.posix.firewalld:
-   port: 10250/tcp
-   permanent: true
-   immediate: true
-   state: enabled
-- name: Open Firewall Ports (8/8) [Flannel]
-  ansible.posix.firewalld:
-   port: 30000-32767/tcp
-   permanent: true
-   immediate: true
-   state: enabled
+# - name: Open Firewall Ports (8/8) [Flannel]
+#   ansible.posix.firewalld:
+#    port: 10250/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports (8/8) [Flannel]
+#   ansible.posix.firewalld:
+#    port: 30000-32767/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
 
 
-- name: Firewall masquerade
-  ansible.posix.firewalld:
-    masquerade: true
-    state: enabled
-    permanent: true
-    immediate: true
+# - name: Firewall masquerade
+#   ansible.posix.firewalld:
+#     masquerade: true
+#     state: enabled
+#     permanent: true
+#     immediate: true
 
-- name: Creating k8s zone
-  ansible.posix.firewalld:
-    zone: kubernetes_pods
-    state: present
-    permanent: true
+# - name: Creating k8s zone
+#   ansible.posix.firewalld:
+#     zone: kubernetes_pods
+#     state: present
+#     permanent: true
 
-- name: Creating k8s zone target
-  ansible.posix.firewalld:
-    zone: kubernetes_pods
-    state: present
-    permanent: true
-    target: ACCEPT
+# - name: Creating k8s zone target
+#   ansible.posix.firewalld:
+#     zone: kubernetes_pods
+#     state: present
+#     permanent: true
+#     target: ACCEPT
 
-- name: Creating k8s zone Source
-  ansible.posix.firewalld:
-    zone: kubernetes_pods
-    permanent: true
-    source: 10.244.0.0/16
-    state: enabled
+# - name: Creating k8s zone Source
+#   ansible.posix.firewalld:
+#     zone: kubernetes_pods
+#     permanent: true
+#     source: 10.244.0.0/16
+#     state: enabled
 
-- name: reload service firewalld
-  systemd:
-    name: firewalld
-    state: reloaded
+# - name: reload service firewalld
+#   systemd:
+#     name: firewalld
+#     state: reloaded
 # Todo: Move these ports out of this file, this was just for debugging

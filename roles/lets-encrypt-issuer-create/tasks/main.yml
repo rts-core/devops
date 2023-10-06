@@ -1,0 +1,9 @@
+---
+# tasks file for lets-encrypt-issuer-create
+
+- name: Apply Issuers
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{issuerYaml | mandatory}}"
+  environment:
+    KUBECONFIG: "/home/{{user | mandatory}}/.kube/config"

@@ -1,0 +1,98 @@
+---
+# tasks file for k8s-firewall
+
+# Shutting firewall off
+- name: Stop and disable firewalld.
+  ansible.builtin.service:
+    name: firewalld
+    state: stopped
+    enabled: False
+
+# - name: Open Firewall Ports [Kubernetes API server]
+#   ansible.posix.firewalld:
+#    port: 6443/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [Kubernetes API server]
+#   ansible.posix.firewalld:
+#    port: 443/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [Kubelet CAdvisor]
+#   ansible.posix.firewalld:
+#    port: 4149/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [Kubelet API]
+#   ansible.posix.firewalld:
+#    port: 10250/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [Kubelet API 2]
+#   ansible.posix.firewalld:
+#    port: 10255/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [Kubelet API 3]
+#   ansible.posix.firewalld:
+#    port: 10256/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [etcd server client API]
+#   ansible.posix.firewalld:
+#    port: 2379/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [etcd server client API]
+#   ansible.posix.firewalld:
+#    port: 2380/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [kube-scheduler]
+#   ansible.posix.firewalld:
+#    port: 10251/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [kube-controller-manager]
+#   ansible.posix.firewalld:
+#    port: 10252/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+# - name: Open Firewall Ports [Prometheus Exporter]
+#   ansible.posix.firewalld:
+#    port: 9099/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+   
+# - name: Open Firewall Ports [CoreDNS UDP]
+#   ansible.posix.firewalld:
+#    port: 53/udp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+   
+# - name: Open Firewall Ports [CoreDNS TCP]
+#   ansible.posix.firewalld:
+#    port: 53/tcp
+#    permanent: true
+#    immediate: true
+#    state: enabled
+
+# - name: Firewall masquerade
+#   ansible.posix.firewalld:
+#     masquerade: true
+#     state: enabled
+#     zone: public
+#     permanent: true
+#     immediate: true

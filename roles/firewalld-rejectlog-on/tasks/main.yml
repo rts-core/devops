@@ -1,0 +1,30 @@
+---
+# tasks file for firewalld-rejectlog
+- name: Modify Firewalld Config
+  ansible.builtin.replace:
+    path: /etc/firewalld/firewalld.conf
+    regexp: 'LogDenied=off'
+    replace: 'LogDenied=all'
+    backup: yes
+
+- name: Restart Firewalld service
+  ansible.builtin.service:
+    name: firewalld
+    state: restarted
+
+- name: Update Sysctl K8s config
+  ansible.builtin.copy:
+    dest: '/etc/rsyslog.d/custom_iptables.conf'
+    content: |
+      :msg,contains,"_DROP" /var/log/iptables.log
+      & stop
+      :msg,contains,"_REJECT" /var/log/iptables.log
+      & stop
+
+    mode: '0777'
+  changed_when: true
+
+- name: Restart rsyslog service
+  ansible.builtin.service:
+    name: rsyslog
+    state: restarted

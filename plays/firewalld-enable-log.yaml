@@ -1,0 +1,7 @@
+- hosts: k8scontrollers, k8sworkers
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/firewalld-rejectlog-on
+      message: Enabling reject log
+      become: true
+      become_method: sudo

@@ -37,6 +37,9 @@ kube_version: 1.26*
 flannel_url: https://github.com/flannel-io/flannel/releases/download/v0.21.4/kube-flannel.yml
 flannelChartVersion: 0.22.0
 
+# Calico
+calicoChartVersion: v3.26.1
+
 # Portmap
 portmap_url: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz
 
@@ -84,3 +87,53 @@ nfsClass: |
 ingressNginxChartVerision: "4.7.1"
 internalIngressName: internal
 externalIngressName: external
+
+#cert-manager
+certManagerVersion: v1.12.3
+issuerYaml: |
+  apiVersion: cert-manager.io/v1
+  kind: ClusterIssuer
+  metadata:
+    name: letsencrypt-staging
+  spec:
+    acme:
+      # The ACME server URL
+      server: https://acme-staging-v02.api.letsencrypt.org/directory
+      # Email address used for ACME registration
+      email: lroe@realtechnologysolutions.io
+      # Name of a secret used to store the ACME account private key
+      privateKeySecretRef:
+        name: letsencrypt-staging
+      # Enable the HTTP-01 challenge provider
+      solvers:
+      - http01:
+          ingress:
+            ingressClassName:  nginx-internal
+      - http01:
+          ingress:
+            ingressClassName:  nginx-external
+  ---
+  apiVersion: cert-manager.io/v1
+  kind: ClusterIssuer
+  metadata:
+    name: letsencrypt-prod
+  spec:
+    acme:
+      # The ACME server URL
+      server: https://acme-v02.api.letsencrypt.org/directory
+      # Email address used for ACME registration
+      email: lroe@realtechnologysolutions.io
+      # Name of a secret used to store the ACME account private key
+      privateKeySecretRef:
+        name: letsencrypt-prod
+      # Enable the HTTP-01 challenge provider
+      solvers:
+      - http01:
+          ingress:
+            ingressClassName:  nginx-internal
+      - http01:
+          ingress:
+            ingressClassName:  nginx-external
+
+# Self signed cert
+certificateName: roeden
