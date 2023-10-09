@@ -108,9 +108,6 @@ issuerYaml: |
       solvers:
       - http01:
           ingress:
-            ingressClassName:  nginx-internal
-      - http01:
-          ingress:
             ingressClassName:  nginx-external
   ---
   apiVersion: cert-manager.io/v1
@@ -128,9 +125,6 @@ issuerYaml: |
         name: letsencrypt-prod
       # Enable the HTTP-01 challenge provider
       solvers:
-      - http01:
-          ingress:
-            ingressClassName:  nginx-internal
       - http01:
           ingress:
             ingressClassName:  nginx-external

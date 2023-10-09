@@ -34,6 +34,8 @@
       message: Creating self signed certificate authority
     - role: ../roles/self-signed-issuer-create
       message: Creating self signed cert-manager issuer
+    - role: ../roles/lets-encrypt-issuer-create
+      message: Creating lets-encrypt cert-manager issuer
 
 - hosts: k8scontrollers, k8sworkers
   remote_user: "{{user}}"
@@ -42,3 +44,27 @@
       message: Trusting CA Certificate
       become: true
       become_method: sudo
+
+# Nginx Ingress
+- hosts: k8sworkers, k8scontrollers
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/ingress-nginx-ports
+      message: Opening Ports for Ingress NGINX
+      become: true
+      become_method: sudo
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../roles/ingress-nginx
+      message: Installing External Ingress NGINX
+      vars:
+        ingressName: ingress-nginx-{{externalIngressName}}
+        ingressNamespace: ingress-nginx-{{externalIngressName}}
+        ingressClass: nginx-{{externalIngressName}}
+    - role: ../roles/ingress-nginx
+      message: Installing Internal Ingress NGINX
+      vars:
+        ingressName: ingress-nginx-{{internalIngressName}}
+        ingressNamespace: ingress-nginx-{{internalIngressName}}
+        ingressClass: nginx-{{internalIngressName}}
