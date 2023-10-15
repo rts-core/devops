@@ -1,3 +1,2 @@
 ---
 # vars file for fetch-kubeconfig
-controllerName: k8s-controller

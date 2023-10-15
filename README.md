@@ -47,7 +47,6 @@ ansible-playbook -i inventories/<Your inventory name> join.yaml
 
 ## Todo List:
 
-- CA Janitor
 - Vault
 - ArgoCD
 - Github Action Workers
@@ -72,3 +71,14 @@ kubeadm init --apiserver-advertise-address={{ ansible_ssh_host }} --control-plan
 kubeadm init phase upload-certs --upload-certs --config=/etc/kubernetes/admin.conf
 
 echo $(kubeadm token create --print-join-command) --control-plane --certificate-key $(kubeadm init --apiserver-advertise-address=192.168.56.104 --control-plane-endpoint=192.168.56.104 phase upload-certs --upload-certs --config /home/rts-k8s/.kube/config | grep -vw -e certificate -e Namespace)
+
+
+# Rocky Install
+
+- Rocky 9
+- Give yourself a sudoer user
+- Set unique Hostname for system
+    + sudo hostnamectl set-hostname [hostname]
+    + nano /etc/hosts
+        - 127.0.0.1 [hostname]
+- SSH into each host once to add them to known hosts

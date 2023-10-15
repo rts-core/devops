@@ -33,10 +33,6 @@ kube_repo: |
   exclude=kubelet kubeadm kubectl
 kube_version: 1.26*
 
-# Flannel
-flannel_url: https://github.com/flannel-io/flannel/releases/download/v0.21.4/kube-flannel.yml
-flannelChartVersion: 0.22.0
-
 # Calico
 calicoChartVersion: v3.26.1
 
@@ -131,3 +127,7 @@ issuerYaml: |
 
 # Self signed cert
 certificateName: roeden
+
+# Vault
+vaultHelmChartVersion: 0.25.0 # Chart Version not App Version
+vaultHelmValuesPath: "{{  (inventory_dir + '/hashicorp_vault/values.yaml') | replace('inventories', 'configurations') }}" # Works from any CD

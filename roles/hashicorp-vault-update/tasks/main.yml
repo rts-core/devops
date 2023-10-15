@@ -1,0 +1,33 @@
+---
+# tasks file for hashicorp-vault-update
+
+- name: Add helm repo
+  kubernetes.core.helm_repository:
+    name: hashicorp
+    repo_url: https://helm.releases.hashicorp.com/
+
+- name: Create a vault namespace
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      api_version: v1
+      kind: Namespace
+      metadata:
+        name: "{{ k8sNamespaceName }}"
+        labels:
+          pod-security.kubernetes.io/enforce: privileged
+          pod-security.kubernetes.io/audit: privileged
+          pod-security.kubernetes.io/warn: privileged
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+
+- name: Install vault
+  kubernetes.core.helm:
+    name: vault
+    namespace: "{{ k8sNamespaceName }}"
+    chart_ref: hashicorp/vault
+    chart_version: "{{ helmChartVersion }}"
+    values: "{{ helmValues }}"
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+
