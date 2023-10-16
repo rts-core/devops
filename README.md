@@ -52,6 +52,12 @@ ansible-playbook -i inventories/<Your inventory name> join.yaml
 - Github Action Workers
 - Artifactory?
 - simplify roles (1 yum role, no crds in settings, etc)
+- Rename roles to match
+- delete old roles
+- copy out CRT to running computer
+- move roles to collection
+- drain nodes play
+- update k8s role
 
 
 

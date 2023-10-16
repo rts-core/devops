@@ -34,7 +34,7 @@
   ansible.builtin.copy:
     dest: '/etc/yum.repos.d/crio-stable.repo'
     content: |
-      {{stable_repo}}
+      {{crioStableRepoFileContents | mandatory}}
     mode: '0644'
     follow: yes
   changed_when: true
@@ -42,14 +42,14 @@
   ansible.builtin.copy:
     dest: '/etc/yum.repos.d/crio.repo'
     content: |
-      {{crio_repo}}
+      {{crioRepoFileContents | mandatory}}
     mode: '0644'
     follow: yes
   changed_when: true
 - name: Install CRI-O (3/3) - YUM Install
   ansible.builtin.yum:
     name:
-      - cri-o-{{crio_version}}
+      - cri-o-{{crioVersion | mandatory}}
       - containernetworking-plugins
     disable_excludes: all
     state: present

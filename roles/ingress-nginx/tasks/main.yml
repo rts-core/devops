@@ -20,7 +20,7 @@
     namespace: "{{ ingressNamespace }}"
     chart_ref: ingress-nginx
     chart_repo_url: https://kubernetes.github.io/ingress-nginx
-    chart_version: "{{ingressNginxChartVerision}}"
+    chart_version: "{{ chartVersion }}"
     set_values:
       - value: crds.validationFailurePolicy=Ignore
         valueType: string

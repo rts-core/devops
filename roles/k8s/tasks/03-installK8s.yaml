@@ -2,7 +2,7 @@
   ansible.builtin.copy:
     dest: '/etc/yum.repos.d/kubernetes.repo'
     content: |
-        {{kube_repo}}
+        {{kubernetesRepoFileContents | mandatory}}
     mode: '0644'
     follow: yes
   changed_when: true
@@ -10,9 +10,9 @@
 - name: Install K8s
   ansible.builtin.yum:
     name:
-      - "kubelet-{{kube_version}}"
-      - "kubeadm-{{kube_version}}"
-      - "kubectl-{{kube_version}}"
+      - "kubelet-{{kubeVersion | mandatory}}"
+      - "kubeadm-{{kubeVersion | mandatory}}"
+      - "kubectl-{{kubeVersion | mandatory}}"
     disable_excludes: all
     state: present
 - name: Enable Kubelet service

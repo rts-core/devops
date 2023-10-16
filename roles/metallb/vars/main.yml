@@ -1,2 +1,3 @@
 ---
 # vars file for metal-lb
+chartVersion: 0.13.9

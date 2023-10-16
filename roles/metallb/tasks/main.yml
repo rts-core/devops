@@ -24,7 +24,7 @@
     name: metallb
     namespace: metallb
     chart_ref: metallb/metallb
-    chart_version: "{{metallb_version}}"
+    chart_version: "{{chartVersion}}"
     set_values:
       - value: controller.admissionWebhooks.enabled=false
         valueType: string
@@ -34,7 +34,7 @@
 - name: Apply Addresspool
   kubernetes.core.k8s:
     state: present
-    definition: "{{addresspool}}"
+    definition: "{{addressPoolDefinition | mandatory}}"
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
 

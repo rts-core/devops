@@ -9,12 +9,16 @@
       become_method: sudo
     - role: ../roles/portmap
       message: Installing portmap
+      releaseUrl: "{{ portmapUrl }}"
       become: true
       become_method: sudo
     - role: ../roles/k8s
       message: Installing controllers
       become: true
       become_method: sudo
+      crioRepoFileContents: "{{ lookup('file', '{{ crioRepoPath }}' ) }}"
+      crioStableRepoFileContents: "{{ lookup('file', '{{ crioStableRepoPath }}' ) }}"
+      kubernetesRepoFileContents: "{{ lookup('file', '{{ kubeRepoPath }}' ) }}"
 
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
@@ -37,6 +41,7 @@
   roles:
     - role: ../roles/helm
       message: Installing helm
+      version: "{{ helmVersion }}"
       become: true
       become_method: sudo
 

@@ -1,11 +1,11 @@
 k8scontrollers:
   hosts:
-    rts-k8s-control:
-      ansible_host: 10.0.0.223
+    roeden-kube-control-01:
+      ansible_host: 10.0.0.218
 
 k8sworkers:
   hosts:
-    rts-k8s-worker-01:
-      ansible_host: 10.0.0.156
-    rts-k8s-worker-02:
-      ansible_host: 10.0.0.172
+    roeden-kube-node-01:
+      ansible_host: 10.0.0.114
+    roeden-kube-node-02:
+      ansible_host: 10.0.0.216

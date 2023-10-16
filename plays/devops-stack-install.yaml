@@ -16,6 +16,9 @@
   remote_user: "{{user}}"
   roles:
     - role: ../roles/nfs-provisioner
+      serverIp: "{{ nfsServerIp }}"
+      volumePath: "{{ nfsVolumePath }}"
+      storageClassDefinition: "{{ lookup('file', '{{ nfsStorageClassPath }}' ) }}"
       message: Installing NFS Provisioner
 
 # Certificate Manager
@@ -35,6 +38,7 @@
     - role: ../roles/self-signed-issuer-create
       message: Creating self signed cert-manager issuer
     - role: ../roles/lets-encrypt-issuer-create
+      issuerYaml: "{{ lookup('file', '{{ certManagerIssuersPath }}' ) }}"
       message: Creating lets-encrypt cert-manager issuer
 
 - hosts: k8scontrollers, k8sworkers
@@ -42,6 +46,7 @@
   roles:
     - role: ../roles/ca-trust
       message: Trusting CA Certificate
+      certificateName: "{{ selfSignedCertificateName }}"
       become: true
       become_method: sudo
 
@@ -59,12 +64,14 @@
     - role: ../roles/ingress-nginx
       message: Installing External Ingress NGINX
       vars:
+        chartVersion: "{{ ingressNginxChartVerision }}"
         ingressName: ingress-nginx-{{externalIngressName}}
         ingressNamespace: ingress-nginx-{{externalIngressName}}
         ingressClass: nginx-{{externalIngressName}}
     - role: ../roles/ingress-nginx
       message: Installing Internal Ingress NGINX
       vars:
+        chartVersion: "{{ ingressNginxChartVerision }}"
         ingressName: ingress-nginx-{{internalIngressName}}
         ingressNamespace: ingress-nginx-{{internalIngressName}}
         ingressClass: nginx-{{internalIngressName}}

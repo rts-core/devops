@@ -20,7 +20,7 @@
 - name: Download portmap
   when: "not portmap_file.stat.exists"
   ansible.builtin.get_url:
-    url: "{{portmap_url}}"
+    url: "{{releaseUrl}}"
     dest: /home/{{user}}/portmap.tgz
     mode: '0664'
 - name: Extract

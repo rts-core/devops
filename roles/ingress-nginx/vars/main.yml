@@ -3,3 +3,4 @@
 ingressName: ingress-nginx
 ingressNamespace: ingress-nginx
 ingressClass: nginx
+chartVersion: "4.7.1"

@@ -1,83 +1,33 @@
+# SSH User Data
 user: rts-k8s
 remote_user: rts-k8s
 
 # Cri-O
-stable_repo: |
-  [devel_kubic_libcontainers_stable]
-  name=Stable Releases of Upstream github.com/containers packages (CentOS_8_Stream)
-  type=rpm-md
-  baseurl=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8_Stream/
-  gpgcheck=1
-  gpgkey=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8_Stream/repodata/repomd.xml.key
-  exclude=cri-o containernetworking-plugins
-  enabled=1
-crio_repo: |
-  [devel_kubic_libcontainers_stable_cri-o_1.26]
-  name=devel:kubic:libcontainers:stable:cri-o:1.26 (CentOS_8_Stream)
-  type=rpm-md
-  baseurl=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.26/CentOS_8_Stream/
-  gpgcheck=1
-  gpgkey=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.26/CentOS_8_Stream/repodata/repomd.xml.key
-  exclude=cri-o containernetworking-plugins
-  enabled=1
-crio_version: 1.26*
+crioStableRepoPath: "{{  (inventory_dir + '/yum.repos.d/crio-stable.repo') | replace('inventories', 'configurations') }}" 
+crioRepoPath: "{{  (inventory_dir + '/yum.repos.d/crio.repo') | replace('inventories', 'configurations') }}" 
+crioVersion: 1.26*
 
 # Kube
-kube_repo: |
-  [kubernetes]
-  name=Kubernetes
-  baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-  enabled=1
-  gpgcheck=1
-  gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-  exclude=kubelet kubeadm kubectl
-kube_version: 1.26*
+kubeRepoPath: "{{  (inventory_dir + '/yum.repos.d/kubernetes.repo') | replace('inventories', 'configurations') }}"
+kubeVersion: 1.26*
 
 # Calico
 calicoChartVersion: v3.26.1
 
 # Portmap
-portmap_url: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz
+portmapUrl: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz
 
 # Helm
-helm_version: 3.11.3
+helmVersion: 3.11.3
 
 # Metal-lb
-metallb_version: 0.13.9
-addresspool: |
-  apiVersion: metallb.io/v1beta1
-  kind: IPAddressPool
-  metadata:
-    name: metallbaddresspool
-    namespace: metallb
-  spec:
-    addresses:
-    - 10.0.3.50-10.0.3.100
-  ---
-  apiVersion: metallb.io/v1beta1
-  kind: L2Advertisement
-  metadata:
-    name: l2advertisement
-    namespace: metallb
-  spec:
-    ipAddressPools:
-    - metallbaddresspool
+metalLbVersion: 0.13.9
+metalLbAddressPoolPath: "{{  (inventory_dir + '/crds/metallb_address_pools.yaml') | replace('inventories', 'configurations') }}" 
 
 # nfs provisioner
 nfsServerIp: "10.0.0.30"
 nfsVolumePath: "/volume1/appdata"
-nfsClass: |
-  apiVersion: storage.k8s.io/v1
-  kind: StorageClass
-  metadata:
-    name: managed-nfs-storage
-    annotations: 
-      storageclass.kubernetes.io/is-default-class: "true"
-  provisioner: k8s-sigs.io/nfs-subdir-external-provisioner # or choose another name, must match deployment's env PROVISIONER_NAME'
-  parameters:
-    archiveOnDelete: "false"
-    onDelete: "retain"
-    pathPattern: "${.PVC.namespace}-${.PVC.name}"
+nfsStorageClassPath: "{{  (inventory_dir + '/crds/nfs_storage_class.yaml') | replace('inventories', 'configurations') }}" 
 
 # ingress-nginx
 ingressNginxChartVerision: "4.7.1"
@@ -86,47 +36,10 @@ externalIngressName: external
 
 #cert-manager
 certManagerVersion: v1.12.3
-issuerYaml: |
-  apiVersion: cert-manager.io/v1
-  kind: ClusterIssuer
-  metadata:
-    name: letsencrypt-staging
-  spec:
-    acme:
-      # The ACME server URL
-      server: https://acme-staging-v02.api.letsencrypt.org/directory
-      # Email address used for ACME registration
-      email: lroe@realtechnologysolutions.io
-      # Name of a secret used to store the ACME account private key
-      privateKeySecretRef:
-        name: letsencrypt-staging
-      # Enable the HTTP-01 challenge provider
-      solvers:
-      - http01:
-          ingress:
-            ingressClassName:  nginx-external
-  ---
-  apiVersion: cert-manager.io/v1
-  kind: ClusterIssuer
-  metadata:
-    name: letsencrypt-prod
-  spec:
-    acme:
-      # The ACME server URL
-      server: https://acme-v02.api.letsencrypt.org/directory
-      # Email address used for ACME registration
-      email: lroe@realtechnologysolutions.io
-      # Name of a secret used to store the ACME account private key
-      privateKeySecretRef:
-        name: letsencrypt-prod
-      # Enable the HTTP-01 challenge provider
-      solvers:
-      - http01:
-          ingress:
-            ingressClassName:  nginx-external
+certManagerIssuersPath: "{{  (inventory_dir + '/crds/cert_manager_issuers.yaml') | replace('inventories', 'configurations') }}" 
 
 # Self signed cert
-certificateName: roeden
+selfSignedCertificateName: roeden
 
 # Vault
 vaultHelmChartVersion: 0.25.0 # Chart Version not App Version

@@ -13,5 +13,7 @@
   roles:
     - role: ../roles/metallb
       message: Installing MetalLB
+      addressPoolDefinition: "{{ lookup('file', '{{ metalLbAddressPoolPath }}' ) }}"
+      chartVersion: "{{ metalLbVersion }}"
       # become: true
       # become_method: sudo
