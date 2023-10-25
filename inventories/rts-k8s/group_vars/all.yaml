@@ -25,7 +25,7 @@ metalLbVersion: 0.13.9
 metalLbAddressPoolPath: "{{  (inventory_dir + '/crds/metallb_address_pools.yaml') | replace('inventories', 'configurations') }}" 
 
 # nfs provisioner
-nfsServerIp: "10.0.0.30"
+nfsServerIp: "12.12.0.30"
 nfsVolumePath: "/volume1/appdata"
 nfsStorageClassPath: "{{  (inventory_dir + '/crds/nfs_storage_class.yaml') | replace('inventories', 'configurations') }}" 
 

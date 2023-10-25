@@ -40,6 +40,9 @@
     - role: ../roles/lets-encrypt-issuer-create
       issuerYaml: "{{ lookup('file', '{{ certManagerIssuersPath }}' ) }}"
       message: Creating lets-encrypt cert-manager issuer
+    - role: ../roles/get-self-signed-cert
+      message: Getting self signed cert
+      certificateName: "{{ selfSignedCertificateName }}"
 
 - hosts: k8scontrollers, k8sworkers
   remote_user: "{{user}}"

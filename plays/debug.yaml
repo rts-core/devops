@@ -1,8 +1,8 @@
 # Vault
-- hosts: k8scontrollers[0]
-  remote_user: "{{user}}"
-  roles:
-    - role: ../roles/hashicorp-vault-update
-      message: Installing Hashicorp Vault
-      helmChartVersion: "{{ vaultHelmChartVersion }}"
-      helmValues: "{{ lookup('file', '{{ vaultHelmValuesPath }}' ) | from_yaml}}"
+# - hosts: k8scontrollers[0]
+#   remote_user: "{{user}}"
+#   roles:
+#     - role: ../roles/hashicorp-vault-update
+#       message: Installing Hashicorp Vault
+#       helmChartVersion: "{{ vaultHelmChartVersion }}"
+#       helmValues: "{{ lookup('file', '{{ vaultHelmValuesPath }}' ) | from_yaml}}"

@@ -1,0 +1,4 @@
+---
+# vars file for get-self-signed-cert
+secretNamespace: cert-manager
+secretName: nginx-ca-secret
