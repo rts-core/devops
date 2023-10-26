@@ -44,3 +44,4 @@ selfSignedCertificateName: roeden
 # Vault
 vaultHelmChartVersion: 0.25.0 # Chart Version not App Version
 vaultHelmValuesPath: "{{  (inventory_dir + '/hashicorp_vault/values.yaml') | replace('inventories', 'configurations') }}" # Works from any CD
+openSSLConfPath: "{{  (inventory_dir + '/hashicorp_vault/server_cert.conf') | replace('inventories', 'configurations') }}" # Works from any CD

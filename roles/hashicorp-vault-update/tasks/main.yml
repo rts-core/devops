@@ -1,6 +1,91 @@
 ---
 # tasks file for hashicorp-vault-update
 
+# Always replace cert in case it's been updated
+# - name: Get CA Crt Secret
+#   ansible.builtin.shell:
+#     cmd: "kubectl get secret {{ certificateSecretName | mandatory }} -n {{ certificateSecretNamespace | mandatory }} -o jsonpath='{.data}' | jq -r '.\"tls.crt\"' | base64 -d"
+#   register: ca_crt_from_secret
+#   environment:
+#     KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+# - name: Get CA Key Secret
+#   ansible.builtin.shell:
+#     cmd: "kubectl get secret {{ certificateSecretName | mandatory }} -n {{ certificateSecretNamespace | mandatory }} -o jsonpath='{.data}' | jq -r '.\"tls.key\"' | base64 -d"
+#   register: ca_key_from_secret
+#   environment:
+#     KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+# - name: Create crt file
+#   ansible.builtin.copy:
+#     content: "{{ ca_crt_from_secret.stdout }}"
+#     dest: "/home/{{user}}/{{ certificateName | mandatory }}.crt"
+
+# - name: Create key file
+#   ansible.builtin.copy:
+#     content: "{{ ca_key_from_secret.stdout }}"
+#     dest: "/home/{{user}}/{{ certificateName | mandatory }}.key"
+
+# - name: Create PEM out of CRT
+#   ansible.builtin.command:
+#     cmd: openssl x509 -in /home/{{user}}/{{ certificateName | mandatory }}.crt -out /home/{{user}}/tls-ca.crt
+
+# - name: Create PEMkey out of Key
+#   ansible.builtin.shell:
+#     cmd: openssl rsa -in /home/{{user}}/{{ certificateName | mandatory }}.key -text > /home/{{user}}/tls-ca.key
+
+# - name: Delete existing secret for new CA cert
+#   k8s:
+#     api_version: v1
+#     kind: secret
+#     namespace: "{{ k8sNamespaceName }}"
+#     name:  vault-ca-crt
+#     state: absent
+#   environment:
+#     KUBECONFIG: "/home/{{user}}/.kube/config"
+
+# - name: Create Vault CA Cert Secret
+#   ansible.builtin.command:
+#     cmd: kubectl --namespace='{{ k8sNamespaceName }}' create secret tls vault-ca-crt --cert /home/{{user}}/tls-ca.crt --key /home/{{user}}/tls-ca.key
+#   environment:
+#     KUBECONFIG: "/home/{{user}}/.kube/config"
+
+# - name: Create Cert creation file
+#   ansible.builtin.copy:
+#     content: "{{ openSSLConf | mandatory }}"
+#     dest: "/home/{{user}}/openssl.cnf"
+
+# - name: Create Vault Server CSR
+#   ansible.builtin.command:
+#     cmd: |
+#       openssl req -new -sha256 -newkey rsa:2048 -config /home/{{user}}/openssl.cnf -nodes -out /home/{{user}}/vault.csr -keyout /home/{{user}}/vault.key -outform PEM
+
+# - name: Create Vault Server cert
+#   ansible.builtin.command:
+#     cmd: |
+#       openssl x509 -req -days 10000 -in /home/{{user}}/vault.csr -out /home/{{user}}/vault.pem -CA /home/{{user}}/tls-ca.crt -CAkey /home/{{user}}/tls-ca.key -CAcreateserial -extfile /home/{{user}}/openssl.cnf -extensions SAN
+
+# - name: Create PEMkey out of Server Key
+#   ansible.builtin.shell:
+#     cmd: openssl rsa -in /home/{{user}}/vault.key -text > /home/{{user}}/vault-key.pem
+
+# - name: Delete existing secret for new server cert
+#   k8s:
+#     api_version: v1
+#     kind: secret
+#     namespace: "{{ k8sNamespaceName }}"
+#     name:  vault-server-crt
+#     state: absent
+#   environment:
+#     KUBECONFIG: "/home/{{user}}/.kube/config"
+
+# - name: Create Vault Server Cert Secret
+#   ansible.builtin.command:
+#     cmd: kubectl --namespace='{{ k8sNamespaceName }}' create secret tls vault-server-crt --cert /home/{{user}}/vault.pem --key /home/{{user}}/vault-key.pem
+#   environment:
+#     KUBECONFIG: "/home/{{user}}/.kube/config"
+
+
 - name: Add helm repo
   kubernetes.core.helm_repository:
     name: hashicorp
@@ -31,3 +116,37 @@
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
 
+
+- name: Wait 30 seconds for safety (DNS has to stand up)
+  ansible.builtin.pause:
+    seconds: 30
+
+- name: Get Vault Keys
+  ansible.builtin.command:
+    cmd: kubectl --namespace='{{ k8sNamespaceName }}' create secret tls vault-server-crt --cert /home/{{user}}/vault.pem --key /home/{{user}}/vault-key.pem
+  register: vault_key_output
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+
+# If unseal secret doesn't exist
+  # Grab keys
+  # Break into secrets
+
+# Unseal Vault
+
+# - name: Remove temp cert files
+#   ansible.builtin.file:
+#     path: /home/{{user}}/{{ item }}
+#     state: absent
+#   loop:
+#     - "{{ certificateName | mandatory }}.crt"
+#     - "{{ certificateName | mandatory }}.key"
+#     - "tls-ca.crt"
+#     - "tls-ca.srl"
+#     - "tls-ca.key"
+#     - "openssl.cnf"
+#     - "vault.conf"
+#     - "vault.key"
+#     - "vault.csr"
+#     - "vault.pem"
+#     - "vault-key.pem"

@@ -61,3 +61,11 @@
   ansible.builtin.file:
     path: ~/fetched
     state: absent
+
+- name: Remove temp cert files
+  ansible.builtin.file:
+    path: /home/{{user}}/{{ item }}
+    state: absent
+  loop:
+    - "{{ certificateName | mandatory }}.crt"
+    - "{{ certificateName | mandatory }}.key"
