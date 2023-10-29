@@ -1,0 +1,9 @@
+# Vault
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../../roles/vault-unseal
+      message: Unsealing Hashicorp Vault
+      become: true
+      become_method: sudo
+      replicaCount: "{{ vaulReplicaCount }}"

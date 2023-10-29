@@ -63,7 +63,11 @@ ansible-playbook -i inventories/<Your inventory name> join.yaml
 
 ansible-playbook -kK -i inventories/rts-k8s ./plays/init.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/devops-stack-install.yaml
+ansible-playbook -i inventories/rts-k8s ./plays/vault/install.yaml
+
+
 ansible-playbook -i inventories/rts-k8s ./plays/debug.yaml
+ansible-playbook -i inventories/rts-k8s ./plays/vault/unseal.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/reset-kubedm.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/fetch-k8sconfig.yaml
 
@@ -88,3 +92,7 @@ echo $(kubeadm token create --print-join-command) --control-plane --certificate-
     + nano /etc/hosts
         - 127.0.0.1 [hostname]
 - SSH into each host once to add them to known hosts
+
+# Vault
+
+https://kubernetes.default.svc

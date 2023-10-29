@@ -2,7 +2,7 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/hashicorp-vault-install
+    - role: ../../roles/hashicorp-vault-install
       message: Installing Hashicorp Vault
       helmChartVersion: "{{ vaultHelmChartVersion }}"
       helmValues: "{{ lookup('file', '{{ vaultHelmValuesPath }}' ) | from_yaml}}"
@@ -11,23 +11,19 @@
       certificateSecretName: nginx-ca-secret
       certificateName: "{{ selfSignedCertificateName }}"
       ingressDefinition: "{{ lookup('file', '{{ vaultIngressPath }}' ) }}"
-    - role: ../roles/vault-unseal
+      certificateDefinition: "{{ lookup('file', '{{ vaultCertificatePath }}' ) }}"
+      tokenReviewerDefinitions: "{{ lookup('file', '{{ vaultTokenReviewerPath }}' ) }}"
+    - role: ../../roles/vault-unseal
       message: Unsealing Hashicorp Vault
       become: true
       become_method: sudo
       replicaCount: 1
-    - role: ../roles/vault-join
+    - role: ../../roles/vault-join
       message: Joining Hashicorp Vault nodes
       initialLeaderHostname: "{{ vaultInitialLeaderHostname }}"
       replicaCount: "{{ vaulReplicaCount }}"
-    - role: ../roles/vault-unseal
+    - role: ../../roles/vault-unseal
       message: Unsealing Hashicorp Vault
       become: true
       become_method: sudo
       replicaCount: "{{ vaulReplicaCount }}"
-
-# - hosts: k8scontrollers[0]
-#   remote_user: "{{user}}"
-#   roles:
-#     - role: ../roles/coredns-restart
-#       message: Restarting kube-dns app

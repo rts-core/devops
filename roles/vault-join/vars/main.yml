@@ -1,0 +1,3 @@
+---
+# vars file for vault-join
+k8sNamespaceName: hashicorp-vault

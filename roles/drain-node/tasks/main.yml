@@ -2,5 +2,7 @@
 # tasks file for drain-node
 - name: Drain Node {{ node }}
   ansible.builtin.command:
-   cmd: kubectl drain {{ node }} --ignore-daemonsets
+   cmd: kubectl drain {{ node }} --ignore-daemonsets --delete-emptydir-data --force --grace-period=10
   changed_when: true
+
+# Todo: empty out the hashicorp vault namespace of pods or you'll be stuck open forever!

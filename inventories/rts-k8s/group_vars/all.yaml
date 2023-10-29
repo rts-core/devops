@@ -44,4 +44,9 @@ selfSignedCertificateName: roeden
 # Vault
 vaultHelmChartVersion: 0.25.0 # Chart Version not App Version
 vaultHelmValuesPath: "{{  (inventory_dir + '/hashicorp_vault/values.yaml') | replace('inventories', 'configurations') }}" # Works from any CD
-openSSLConfPath: "{{  (inventory_dir + '/hashicorp_vault/server_cert.conf') | replace('inventories', 'configurations') }}" # Works from any CD
+vaultOpenSSLConfPath: "{{  (inventory_dir + '/hashicorp_vault/server_cert.conf') | replace('inventories', 'configurations') }}" # Works from any CD
+vaulReplicaCount: 5
+vaultInitialLeaderHostname: http://vault-0.vault-internal.hashicorp-vault.svc.cluster.local:8200
+vaultIngressPath: "{{  (inventory_dir + '/hashicorp_vault/ingress.yaml') | replace('inventories', 'configurations') }}" 
+vaultCertificatePath: "{{  (inventory_dir + '/hashicorp_vault/certificate.yaml') | replace('inventories', 'configurations') }}" 
+vaultTokenReviewerPath: "{{  (inventory_dir + '/hashicorp_vault/token_reviewer.yaml') | replace('inventories', 'configurations') }}" 

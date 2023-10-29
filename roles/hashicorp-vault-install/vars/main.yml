@@ -1,5 +1,5 @@
 ---
-# vars file for hashicorp-vault-update
+# vars file for hashicorp-vault-install
 helmValues: |
   # unset
 helmChartVersion: 0.25.0
