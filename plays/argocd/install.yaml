@@ -1,0 +1,12 @@
+# Argo-CD
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../../roles/argocd/install
+      message: Installing Argo-CD
+      helmChartVersion: "{{ argoHelmChartVersion }}"
+      helmValues: "{{ lookup('file', '{{ argoHelmValuesPath }}' ) | from_yaml}}"
+      ingressDefinition: "{{ lookup('file', '{{ argoIngressPath }}' ) }}"
+      certificateDefinition: "{{ lookup('file', '{{ argoCertificatePath }}' ) }}"
+
+# add k8s cert

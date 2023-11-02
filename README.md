@@ -59,11 +59,17 @@ ansible-playbook -i inventories/<Your inventory name> join.yaml
 - drain nodes play
 - update k8s role
 
-
+# Run these
 
 ansible-playbook -kK -i inventories/rts-k8s ./plays/init.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/devops-stack-install.yaml
 ansible-playbook -i inventories/rts-k8s ./plays/vault/install.yaml
+
+# Setup Argo
+ansible-playbook -i inventories/rts-k8s ./plays/argocd/install.yaml
+Set creds using example from yaml (github-repo-creds-example)
+ansible-playbook -i inventories/rts-k8s ./plays/argocd/setup-catalog.yaml
+
 
 
 ansible-playbook -i inventories/rts-k8s ./plays/debug.yaml
@@ -95,4 +101,4 @@ echo $(kubeadm token create --print-join-command) --control-plane --certificate-
 
 # Vault
 
-https://kubernetes.default.svc
+http://kubernetes.default.svc

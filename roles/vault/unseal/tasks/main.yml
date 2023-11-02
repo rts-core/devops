@@ -1,0 +1,78 @@
+---
+# tasks file for unseal
+
+- name: Register vault status
+  ansible.builtin.shell:
+    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-0 -- vault status
+  register: vault_status
+  ignore_errors: true
+  no_log: true
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+
+- name: Create output file
+  ansible.builtin.copy:
+    content: "{{ vault_status.stdout }}"
+    dest: "/home/{{user}}/vault_status.txt"
+
+- name: Register vault seal status
+  ansible.builtin.shell:
+    cmd: "cat /home/{{user}}/vault_status.txt | perl -n -e'/Sealed[ \t]+(.*)$/ && print $1'"
+  register: seal_status
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+
+- name: Remove temp file
+  ansible.builtin.file:
+    path: "/home/{{user}}/vault_status.txt"
+    state: absent
+
+# - block:
+
+- name: Get Unseal Key 1
+  ansible.builtin.shell:
+    cmd: "kubectl get secret unseal-keys -n {{ k8sNamespaceName }} -o jsonpath='{.data}' | jq -r '.\"unseal1.key\"' | base64 -d"
+  register: unseal_key_1
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Get Unseal Key 2
+  ansible.builtin.shell:
+    cmd: "kubectl get secret unseal-keys -n {{ k8sNamespaceName }} -o jsonpath='{.data}' | jq -r '.\"unseal2.key\"' | base64 -d"
+  register: unseal_key_2
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Get Unseal Key 3
+  ansible.builtin.shell:
+    cmd: "kubectl get secret unseal-keys -n {{ k8sNamespaceName }} -o jsonpath='{.data}' | jq -r '.\"unseal3.key\"' | base64 -d"
+  register: unseal_key_3
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Unseal Key 1
+  ansible.builtin.command:
+    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-{{ item }} -- vault operator unseal {{ unseal_key_1.stdout }}
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+  loop: "{{ range(0, replicaCount | mandatory | int ) | list }}"
+  ignore_errors: true
+
+- name: Unseal Key 2
+  ansible.builtin.command:
+    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-{{ item }} -- vault operator unseal {{ unseal_key_2.stdout }}
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+  loop: "{{ range(0, replicaCount | mandatory | int ) | list }}"
+  ignore_errors: true
+
+- name: Unseal Key 3
+  ansible.builtin.command:
+    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-{{ item }} -- vault operator unseal {{ unseal_key_3.stdout }}
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+  loop: "{{ range(0, replicaCount | mandatory | int ) | list }}"
+  ignore_errors: true
+
+  # when:
+  #   - seal_status.stdout == 'true' # only do this block when we are sealed

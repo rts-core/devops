@@ -1,0 +1,3 @@
+---
+# vars file for argocd
+k8sNamespaceName: argo-cd

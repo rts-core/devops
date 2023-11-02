@@ -60,11 +60,22 @@ server:
     enabled: true
 
   standalone:
-    enabled: false
+    enabled: true
+    config: |
+      ui = true
+      listener "tcp" {
+        tls_disable = true
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+
+      storage "file" {
+        path = "/vault/data"
+      }
 
   # Run Vault in "HA" mode.
   ha:
-    enabled: true
+    enabled: false
     replicas: 5
     raft:
       enabled: true

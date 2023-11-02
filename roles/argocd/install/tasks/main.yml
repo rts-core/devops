@@ -1,0 +1,91 @@
+---
+# tasks file for install
+
+- name: Add helm repo
+  kubernetes.core.helm_repository:
+    name: argo-cd
+    repo_url: https://argoproj.github.io/argo-helm
+
+- name: Create an Argo-CD namespace
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      api_version: v1
+      kind: Namespace
+      metadata:
+        name: "{{ k8sNamespaceName }}"
+        labels:
+          pod-security.kubernetes.io/enforce: privileged
+          pod-security.kubernetes.io/audit: privileged
+          pod-security.kubernetes.io/warn: privileged
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+
+- name: Install argocd
+  kubernetes.core.helm:
+    name: argo-cd
+    namespace: "{{ k8sNamespaceName }}"
+    chart_ref: argo-cd/argo-cd
+    chart_version: "{{ helmChartVersion | mandatory}}"
+    values: "{{ helmValues | mandatory }}"
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+
+# create ingress
+- name: Apply Certificate
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{certificateDefinition | mandatory}}"
+
+- name: Apply Ingress
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ingressDefinition | mandatory}}"
+
+# get initial admin secret
+- name: Get initial admin secret
+  ansible.builtin.shell:
+    cmd: kubectl get secret --namespace='{{ k8sNamespaceName }}' argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+  register: init_admin_secret
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+  
+- name: Create output file
+  ansible.builtin.copy:
+    content: "{{ init_admin_secret.stdout }}"
+    dest: "/home/{{user}}/argocd_init.secret"
+
+- name: Ensures dir exists
+  delegate_to: localhost
+  file: 
+    path: "~/ansible_outputs"
+    state: directory
+
+- name: Fetch files
+  ansible.builtin.fetch:
+    src: /home/{{user}}/argocd_init.secret
+    dest: ~/fetched
+
+- name: Remove old file
+  delegate_to: localhost
+  ansible.builtin.file:
+    path: ~/ansible_outputs/argocd_init.secret
+    state: absent
+
+- name: Move the file
+  delegate_to: localhost
+  ansible.builtin.shell:
+    cmd: mv ~/fetched/{{ ansible_hostname }}/home/rts-k8s/argocd_init.secret ~/ansible_outputs/argocd_init.secret
+  changed_when: true
+
+- name: Remove temp file
+  ansible.builtin.file:
+    path: "/home/{{user}}/argocd_init.secret"
+    state: absent
+
+- name: Remove fetched directory
+  delegate_to: localhost
+  ansible.builtin.file:
+    path: ~/fetched
+    state: absent
+

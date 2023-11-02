@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argo-certificate
+  namespace: argo-cd
+spec:
+  secretName: argo-tls-secret
+  issuerRef:
+    name: nginx-ca-issuer
+    kind: ClusterIssuer
+  dnsNames:
+    - argo.roeden.corp

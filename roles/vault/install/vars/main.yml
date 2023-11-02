@@ -1,0 +1,6 @@
+---
+# vars file for vault/install
+helmValues: |
+  # unset
+helmChartVersion: 0.25.0
+k8sNamespaceName: hashicorp-vault

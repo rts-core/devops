@@ -1,0 +1,6 @@
+---
+# tasks file for wait
+
+- name: Wait for safety
+  ansible.builtin.pause:
+   seconds: "{{ waitSeconds| mandatory | int}}"

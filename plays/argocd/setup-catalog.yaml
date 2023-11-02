@@ -1,0 +1,7 @@
+# Argo-CD
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../../roles/argocd/setup-helm-catalog
+      message: Installing Argo-CD
+      helmCatalogDefinition: "{{ lookup('file', '{{ argoHelmCatalogPath }}' ) }}"
