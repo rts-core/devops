@@ -1,10 +1,10 @@
 ---
 # tasks file for install
 
-- name: Add helm repo
-  kubernetes.core.helm_repository:
-    name: argo-cd
-    repo_url: https://argoproj.github.io/argo-helm
+# - name: Add helm repo
+#   kubernetes.core.helm_repository:
+#     name: argo-cd
+#     repo_url: https://argoproj.github.io/argo-helm
 
 - name: Create an Argo-CD namespace
   kubernetes.core.k8s:
@@ -21,26 +21,61 @@
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
 
-- name: Install argocd
-  kubernetes.core.helm:
-    name: argo-cd
-    namespace: "{{ k8sNamespaceName }}"
-    chart_ref: argo-cd/argo-cd
-    chart_version: "{{ helmChartVersion | mandatory}}"
-    values: "{{ helmValues | mandatory }}"
+# Checkout repo
+- name: Remove git directory
+  ansible.builtin.file:
+    path: /tmp/helm_repo
+    state: absent
+
+- name: Git clone stable repo on HEAD
+  ansible.builtin.git:
+    repo: "{{ helmChartRepo | mandatory }}"
+    dest: /tmp/helm_repo
+
+- name: Build helm dependencies
+  ansible.builtin.command:
+    cmd: helm dependency build /tmp/helm_repo
+  changed_when: true
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
 
-# create ingress
-- name: Apply Certificate
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{certificateDefinition | mandatory}}"
+- name: Deploy chart from local path
+  kubernetes.core.helm:
+    name: argo-cd
+    chart_ref: /tmp/helm_repo
+    namespace: "{{ k8sNamespaceName }}"
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
 
-- name: Apply Ingress
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ingressDefinition | mandatory}}"
+- name: Remove git directory
+  ansible.builtin.file:
+    path: /tmp/helm_repo
+    state: absent
+
+- name: Wait 1 minute for safety (Secret generation)
+  ansible.builtin.pause:
+    minutes: 1
+
+
+# - name: Install argocd
+#   kubernetes.core.helm:
+#     name: argo-cd
+#     namespace: "{{ k8sNamespaceName }}"
+#     chart_repo_url: https://github.com/rts-core/argo-cd.git
+#     chart_ref: ''
+#   environment:
+#     KUBECONFIG: "/home/{{user}}/.kube/config"
+
+# create ingress
+# - name: Apply Certificate
+#   kubernetes.core.k8s:
+#     state: present
+#     definition: "{{certificateDefinition | mandatory}}"
+
+# - name: Apply Ingress
+#   kubernetes.core.k8s:
+#     state: present
+#     definition: "{{ingressDefinition | mandatory}}"
 
 # get initial admin secret
 - name: Get initial admin secret
@@ -53,7 +88,7 @@
 - name: Create output file
   ansible.builtin.copy:
     content: "{{ init_admin_secret.stdout }}"
-    dest: "/home/{{user}}/argocd_init.secret"
+    dest: "/home/{{user}}/argocd_init_secret.txt"
 
 - name: Ensures dir exists
   delegate_to: localhost
@@ -63,24 +98,24 @@
 
 - name: Fetch files
   ansible.builtin.fetch:
-    src: /home/{{user}}/argocd_init.secret
+    src: /home/{{user}}/argocd_init_secret.txt
     dest: ~/fetched
 
 - name: Remove old file
   delegate_to: localhost
   ansible.builtin.file:
-    path: ~/ansible_outputs/argocd_init.secret
+    path: ~/ansible_outputs/argocd_init_secret.txt
     state: absent
 
 - name: Move the file
   delegate_to: localhost
   ansible.builtin.shell:
-    cmd: mv ~/fetched/{{ ansible_hostname }}/home/rts-k8s/argocd_init.secret ~/ansible_outputs/argocd_init.secret
+    cmd: mv ~/fetched/{{ ansible_hostname }}/home/rts-k8s/argocd_init_secret.txt ~/ansible_outputs/argocd_init_secret.txt
   changed_when: true
 
 - name: Remove temp file
   ansible.builtin.file:
-    path: "/home/{{user}}/argocd_init.secret"
+    path: "/home/{{user}}/argocd_init_secret.txt"
     state: absent
 
 - name: Remove fetched directory

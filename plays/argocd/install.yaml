@@ -4,7 +4,7 @@
   roles:
     - role: ../../roles/argocd/install
       message: Installing Argo-CD
-      helmChartVersion: "{{ argoHelmChartVersion }}"
+      helmChartRepo: "{{ argoHelmChartRepo }}"
       helmValues: "{{ lookup('file', '{{ argoHelmValuesPath }}' ) | from_yaml}}"
       ingressDefinition: "{{ lookup('file', '{{ argoIngressPath }}' ) }}"
       certificateDefinition: "{{ lookup('file', '{{ argoCertificatePath }}' ) }}"
