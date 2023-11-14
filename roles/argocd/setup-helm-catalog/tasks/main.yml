@@ -1,8 +1,0 @@
----
-# tasks file for setup-helm-catalog
-
-# create ingress
-- name: Apply Helm Catalog Application
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{helmCatalogDefinition | mandatory}}"

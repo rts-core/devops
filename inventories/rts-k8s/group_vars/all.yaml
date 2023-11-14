@@ -53,8 +53,4 @@ vaultTokenReviewerPath: "{{  (inventory_dir + '/hashicorp_vault/token_reviewer.y
 
 # ArgoCD
 argoHelmChartRepo: git@github.com:rts-core/argo-cd.git
-argoHelmValuesPath: "{{  (inventory_dir + '/argocd/values.yaml') | replace('inventories', 'configurations') }}" # Works from any CD
-argoIngressPath: "{{  (inventory_dir + '/argocd/ingress.yaml') | replace('inventories', 'configurations') }}" 
-argoCertificatePath: "{{  (inventory_dir + '/argocd/certificate.yaml') | replace('inventories', 'configurations') }}" 
-argoUsersPath: "{{  (inventory_dir + '/argocd/certificate.yaml') | replace('inventories', 'configurations') }}" 
-argoHelmCatalogPath: "{{  (inventory_dir + '/argocd/root-helm.yaml') | replace('inventories', 'configurations') }}" 
+serviceCatalogHelmChartRepo: git@github.com:rts-core/service-catalog.git

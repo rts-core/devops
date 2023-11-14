@@ -1,5 +1,5 @@
 # K8s
-- import_playbook: ./k8s-install.yaml
+- import_playbook: ./k8s/install.yaml
 
 # MetalLB
 - import_playbook: ./metallb-install.yaml

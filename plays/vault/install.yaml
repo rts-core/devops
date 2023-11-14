@@ -6,10 +6,6 @@
       message: Installing Hashicorp Vault
       helmChartVersion: "{{ vaultHelmChartVersion }}"
       helmValues: "{{ lookup('file', '{{ vaultHelmValuesPath }}' ) | from_yaml}}"
-      openSSLConf: "{{ lookup('file', '{{ vaultOpenSSLConfPath }}' ) }}"
-      certificateSecretNamespace: cert-manager
-      certificateSecretName: nginx-ca-secret
-      certificateName: "{{ selfSignedCertificateName }}"
       ingressDefinition: "{{ lookup('file', '{{ vaultIngressPath }}' ) }}"
       certificateDefinition: "{{ lookup('file', '{{ vaultCertificatePath }}' ) }}"
     - role: ../../roles/vault/unseal

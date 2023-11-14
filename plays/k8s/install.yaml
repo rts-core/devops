@@ -60,23 +60,6 @@
     - role: ../roles/calico
       message: Install Calico
 
-# # Flannel
-# - hosts: k8scontrollers, k8sworkers
-#   remote_user: "{{user}}"
-#   roles:
-#     - role: ../roles/flannel-firewall
-#       message: Modifying Firewall Rules for Flannel
-#       become: true
-#       become_method: sudo
-
-# - hosts: k8scontrollers[0]
-#   remote_user: "{{user}}"
-#   roles:
-#     - role: ../roles/flannel
-#       message: Install Flannel
-#       become: true
-#       become_method: sudo
-
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:

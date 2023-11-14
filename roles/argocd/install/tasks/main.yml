@@ -1,11 +1,6 @@
 ---
 # tasks file for install
 
-# - name: Add helm repo
-#   kubernetes.core.helm_repository:
-#     name: argo-cd
-#     repo_url: https://argoproj.github.io/argo-helm
-
 - name: Create an Argo-CD namespace
   kubernetes.core.k8s:
     state: present
@@ -55,27 +50,6 @@
 - name: Wait 1 minute for safety (Secret generation)
   ansible.builtin.pause:
     minutes: 1
-
-
-# - name: Install argocd
-#   kubernetes.core.helm:
-#     name: argo-cd
-#     namespace: "{{ k8sNamespaceName }}"
-#     chart_repo_url: https://github.com/rts-core/argo-cd.git
-#     chart_ref: ''
-#   environment:
-#     KUBECONFIG: "/home/{{user}}/.kube/config"
-
-# create ingress
-# - name: Apply Certificate
-#   kubernetes.core.k8s:
-#     state: present
-#     definition: "{{certificateDefinition | mandatory}}"
-
-# - name: Apply Ingress
-#   kubernetes.core.k8s:
-#     state: present
-#     definition: "{{ingressDefinition | mandatory}}"
 
 # get initial admin secret
 - name: Get initial admin secret
