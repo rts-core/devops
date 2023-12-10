@@ -1,21 +1,6 @@
 ---
 # tasks file for setup-service-catalog
 
-- name: Create an Service Catalog namespace
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      api_version: v1
-      kind: Namespace
-      metadata:
-        name: "{{ k8sNamespaceName }}"
-        labels:
-          pod-security.kubernetes.io/enforce: privileged
-          pod-security.kubernetes.io/audit: privileged
-          pod-security.kubernetes.io/warn: privileged
-  environment:
-    KUBECONFIG: "/home/{{user}}/.kube/config"
-
 # Checkout repo
 - name: Remove git directory
   ansible.builtin.file:

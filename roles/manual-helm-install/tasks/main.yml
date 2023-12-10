@@ -12,6 +12,10 @@
           pod-security.kubernetes.io/enforce: privileged
           pod-security.kubernetes.io/audit: privileged
           pod-security.kubernetes.io/warn: privileged
+          app.kubernetes.io/managed-by: Helm
+        annotations:
+          meta.helm.sh/release-name: service-catalog
+          meta.helm.sh/release-namespace: argo-cd
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
 
