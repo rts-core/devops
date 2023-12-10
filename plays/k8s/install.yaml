@@ -3,16 +3,16 @@
 - hosts: k8sworkers, k8scontrollers
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/k8s-firewall
+    - role: ../../roles/k8s-firewall
       message: Opening K8s firewall ports
       become: true
       become_method: sudo
-    - role: ../roles/portmap
+    - role: ../../roles/portmap
       message: Installing portmap
       releaseUrl: "{{ portmapUrl }}"
       become: true
       become_method: sudo
-    - role: ../roles/k8s
+    - role: ../../roles/k8s
       message: Installing controllers
       become: true
       become_method: sudo
@@ -23,7 +23,7 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/k8s-init
+    - role: ../../roles/k8s-init
       message: Initializing K8s
       become: true
       become_method: sudo
@@ -31,7 +31,7 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/fetch-kubeconfig
+    - role: ../../roles/fetch-kubeconfig
       message: Downloading kubeconfig
       # become: true
       # become_method: sudo
@@ -39,7 +39,7 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/helm
+    - role: ../../roles/helm
       message: Installing helm
       version: "{{ helmVersion }}"
       become: true
@@ -49,7 +49,7 @@
 - hosts: k8scontrollers, k8sworkers
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/calico-firewall
+    - role: ../../roles/calico-firewall
       message: Modifying Firewall Rules for Calico
       become: true
       become_method: sudo
@@ -57,13 +57,13 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/calico
+    - role: ../../roles/calico
       message: Install Calico
 
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/k8s-get-join-token
+    - role: ../../roles/k8s-get-join-token
       message: Getting join token
       become: true
       become_method: sudo
@@ -80,7 +80,7 @@
 - hosts: k8sworkers
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/k8s-join-worker
+    - role: ../../roles/k8s-join-worker
       message: Joining K8s network
       become: true
       become_method: sudo
@@ -88,5 +88,5 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/coredns-restart
+    - role: ../../roles/coredns-restart
       message: Restarting kube-dns app

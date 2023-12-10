@@ -1,7 +1,7 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/k8s-get-join-token
+    - role: .../../roles/k8s-get-join-token
       message: Getting join token
       become: true
       become_method: sudo
@@ -18,7 +18,7 @@
 - hosts: k8sworkers
   remote_user: "{{user}}"
   roles:
-    - role: ../roles/k8s-join-worker
+    - role: ../../roles/k8s-join-worker
       message: Joining K8s network
       become: true
       become_method: sudo

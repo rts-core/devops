@@ -2,6 +2,34 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    - role: ../../roles/argocd/install
+    - role: ../../roles/manual-helm-install
+      message: Installing MetalLB
+      helmChartRepo: "{{ metalLbHelmChartRepo }}"
+      helmAppName: metallb
+      k8sNamespaceName: metallb
+      safetyDelayInMinutes: 3
+    - role: ../../roles/manual-helm-install
+      message: Installing CertManager
+      helmChartRepo: "{{ certManagerHelmChartRepo }}"
+      helmAppName: cert-manager
+      k8sNamespaceName: cert-manager
+      safetyDelayInMinutes: 1
+    - role: ../../roles/manual-helm-install
+      message: Installing Internal NGINX Ingress
+      helmChartRepo: "{{ ingressHelmChartRepo }}"
+      helmAppName: ingress-nginx-internal
+      k8sNamespaceName: ingress-nginx-internal
+      safetyDelayInMinutes: 2
+    - role: ../../roles/manual-helm-install
       message: Installing Argo-CD
       helmChartRepo: "{{ argoHelmChartRepo }}"
+      helmAppName: argo-cd
+      k8sNamespaceName: argo-cd
+      safetyDelayInMinutes: 1
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../../roles/argocd/install
+      message: Initializing Argo-CD
+      helmChartRepo: "{{ argoHelmChartRepo }}"
+      k8sNamespaceName: argo-cd

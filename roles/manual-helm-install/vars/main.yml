@@ -1,0 +1,3 @@
+---
+# vars file for manual-helm-install
+safetyDelayInMinutes: 1
