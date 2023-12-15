@@ -1,32 +1,32 @@
 - hosts: k8scontrollers[0]
   remote_user: "{{user}}"
   roles:
-    # - role: ../../roles/update-kubeadm-control
-    #   message: Updating KubeADM
-    #   kubernetesRepoFileContents: "{{ lookup('file', '{{ kubeRepoPath }}' ) }}"
-    #   become: true
-    #   become_method: sudo
-    # - role: ../../roles/wait
-    #   message: Waiting 120 Seconds for Safety
-    #   waitSeconds: 120
-    # - role: ../../roles/drain-node
-    #   message: Draining node
-    #   runLocal: true
-    #   node: "{{ inventory_hostname }}"
-    # - role:  ../../roles/update-k8s
-    #   message: Updating K8s
-    #   crioRepoFileContents: "{{ lookup('file', '{{ crioRepoPath }}' ) }}"
-    #   crioStableRepoFileContents: "{{ lookup('file', '{{ crioStableRepoPath }}' ) }}"
-    #   kubernetesRepoFileContents: "{{ lookup('file', '{{ kubeRepoPath }}' ) }}"
-    #   become: true
-    #   become_method: sudo
-    # - role: ../../roles/wait
-    #   message: Waiting Before uncordon for control
-    #   waitSeconds: 120
-    # - role: ../../roles/uncordon-node
-    #   message: Uncordon node
-    #   runLocal: true
-    #   node: "{{ inventory_hostname }}"
+    - role: ../../roles/update-kubeadm-control
+      message: Updating KubeADM
+      kubernetesRepoFileContents: "{{ lookup('file', '{{ kubeRepoPath }}' ) }}"
+      become: true
+      become_method: sudo
+    - role: ../../roles/wait
+      message: Waiting 120 Seconds for Safety
+      waitSeconds: 120
+    - role: ../../roles/drain-node
+      message: Draining node
+      runLocal: true
+      node: "{{ inventory_hostname }}"
+    - role:  ../../roles/update-k8s
+      message: Updating K8s
+      crioRepoFileContents: "{{ lookup('file', '{{ crioRepoPath }}' ) }}"
+      crioStableRepoFileContents: "{{ lookup('file', '{{ crioStableRepoPath }}' ) }}"
+      kubernetesRepoFileContents: "{{ lookup('file', '{{ kubeRepoPath }}' ) }}"
+      become: true
+      become_method: sudo
+    - role: ../../roles/wait
+      message: Waiting Before uncordon for control
+      waitSeconds: 120
+    - role: ../../roles/uncordon-node
+      message: Uncordon node
+      runLocal: true
+      node: "{{ inventory_hostname }}"
 
 - hosts: k8sworkers
   serial: 1
