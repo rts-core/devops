@@ -5,11 +5,11 @@ remote_user: rts-k8s
 # Cri-O
 crioStableRepoPath: "{{  (inventory_dir + '/yum.repos.d/crio-stable.repo') | replace('inventories', 'configurations') }}" 
 crioRepoPath: "{{  (inventory_dir + '/yum.repos.d/crio.repo') | replace('inventories', 'configurations') }}" 
-crioVersion: 1.26*
+crioVersion: 1.27.1
 
 # Kube
 kubeRepoPath: "{{  (inventory_dir + '/yum.repos.d/kubernetes.repo') | replace('inventories', 'configurations') }}"
-kubeVersion: 1.26*
+kubeVersion: 1.27.6
 
 # Calico
 calicoChartVersion: v3.26.1
