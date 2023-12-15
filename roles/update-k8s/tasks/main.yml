@@ -46,7 +46,6 @@
   ansible.builtin.yum:
     name:
       - "kubelet-{{kubeVersion | mandatory}}"
-      - "kubeadm-{{kubeVersion | mandatory}}"
       - "kubectl-{{kubeVersion | mandatory}}"
     disable_excludes: all
     state: present
