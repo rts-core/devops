@@ -1,0 +1,16 @@
+- hosts: k8scontrollers[0]
+  remote_user: "{{user}}"
+  roles:
+    - role: ../../roles/vault/get-unseal-keys
+      message: Getting Vault Unseal Keys
+      replicaCount: "{{ vaulReplicaCount }}"
+    - role: ../../roles/vault/unseal
+      message: Unsealing Vault
+      become: true
+      become_method: sudo
+      replicaCount: "{{ vaulReplicaCount }}"
+    - role: ../../roles/vault/k8s-auth
+      message: Setting up K8s Auth for Vault
+      become: true
+      become_method: sudo
+      replicaCount: "{{ vaulReplicaCount }}"

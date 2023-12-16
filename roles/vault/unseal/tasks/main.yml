@@ -3,7 +3,7 @@
 
 - name: Register vault status
   ansible.builtin.shell:
-    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-0 -- vault status
+    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' hashicorp-vault-0 -- vault status
   register: vault_status
   ignore_errors: true
   no_log: true
@@ -52,7 +52,7 @@
 
 - name: Unseal Key 1
   ansible.builtin.command:
-    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-{{ item }} -- vault operator unseal {{ unseal_key_1.stdout }}
+    cmd: "kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' hashicorp-vault-{{ item }} -- vault operator unseal {{ unseal_key_1.stdout }}"
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
   loop: "{{ range(0, replicaCount | mandatory | int ) | list }}"
@@ -60,7 +60,7 @@
 
 - name: Unseal Key 2
   ansible.builtin.command:
-    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-{{ item }} -- vault operator unseal {{ unseal_key_2.stdout }}
+    cmd: "kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' hashicorp-vault-{{ item }} -- vault operator unseal {{ unseal_key_2.stdout }}"
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
   loop: "{{ range(0, replicaCount | mandatory | int ) | list }}"
@@ -68,7 +68,7 @@
 
 - name: Unseal Key 3
   ansible.builtin.command:
-    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-{{ item }} -- vault operator unseal {{ unseal_key_3.stdout }}
+    cmd: "kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' hashicorp-vault-{{ item }} -- vault operator unseal {{ unseal_key_3.stdout }}"
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
   loop: "{{ range(0, replicaCount | mandatory | int ) | list }}"

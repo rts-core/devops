@@ -20,40 +20,12 @@ portmapUrl: https://github.com/containernetworking/plugins/releases/download/v1.
 # Helm
 helmVersion: 3.11.3
 
-# Metal-lb
-metalLbVersion: 0.13.9
-metalLbAddressPoolPath: "{{  (inventory_dir + '/crds/metallb_address_pools.yaml') | replace('inventories', 'configurations') }}" 
-
-# nfs provisioner
-nfsServerIp: "12.12.0.30"
-nfsVolumePath: "/volume1/appdata"
-nfsStorageClassPath: "{{  (inventory_dir + '/crds/nfs_storage_class.yaml') | replace('inventories', 'configurations') }}" 
-
-# ingress-nginx
-ingressNginxChartVerision: "4.7.1"
-internalIngressName: internal
-externalIngressName: external
-
-#cert-manager
-certManagerVersion: v1.12.3
-certManagerIssuersPath: "{{  (inventory_dir + '/crds/cert_manager_issuers.yaml') | replace('inventories', 'configurations') }}" 
-
 # Self signed cert
 selfSignedCertificateName: test
-
-# Vault
-vaultHelmChartVersion: 0.25.0 # Chart Version not App Version
-vaultHelmValuesPath: "{{  (inventory_dir + '/hashicorp_vault/values.yaml') | replace('inventories', 'configurations') }}" # Works from any CD
-vaultOpenSSLConfPath: "{{  (inventory_dir + '/hashicorp_vault/server_cert.conf') | replace('inventories', 'configurations') }}" # Works from any CD
-vaulReplicaCount: 1
-vaultInitialLeaderHostname: http://vault-0.vault-internal.hashicorp-vault.svc.cluster.local:8200
-vaultIngressPath: "{{  (inventory_dir + '/hashicorp_vault/ingress.yaml') | replace('inventories', 'configurations') }}" 
-vaultCertificatePath: "{{  (inventory_dir + '/hashicorp_vault/certificate.yaml') | replace('inventories', 'configurations') }}" 
-vaultTokenReviewerPath: "{{  (inventory_dir + '/hashicorp_vault/token_reviewer.yaml') | replace('inventories', 'configurations') }}" 
 
 # ArgoCD
 metalLbHelmChartRepo: git@github.com:rts-core/metallb.git
 certManagerHelmChartRepo: git@github.com:rts-core/cert-manager.git
 ingressHelmChartRepo: git@github.com:rts-core/nginx-ingress-internal.git
 argoHelmChartRepo: git@github.com:rts-core/argo-cd.git
-serviceCatalogHelmChartRepo: git@github.com:rts-core/service-catalog.git
+serviceCatalogHelmChartRepo: git@github.com:rts-core/test-service-catalog.git

@@ -1,45 +1,9 @@
 ---
-# tasks file for vault/install
+# tasks file for get-unseal-keys
 
-- name: Add helm repo
-  kubernetes.core.helm_repository:
-    name: hashicorp
-    repo_url: https://helm.releases.hashicorp.com/
-
-- name: Create a vault namespace
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      api_version: v1
-      kind: Namespace
-      metadata:
-        name: "{{ k8sNamespaceName }}"
-        labels:
-          pod-security.kubernetes.io/enforce: privileged
-          pod-security.kubernetes.io/audit: privileged
-          pod-security.kubernetes.io/warn: privileged
-  environment:
-    KUBECONFIG: "/home/{{user}}/.kube/config"
-
-- name: Install vault
-  kubernetes.core.helm:
-    name: vault
-    namespace: "{{ k8sNamespaceName }}"
-    chart_ref: hashicorp/vault
-    chart_version: "{{ helmChartVersion }}"
-    values: "{{ helmValues }}"
-  environment:
-    KUBECONFIG: "/home/{{user}}/.kube/config"
-
-
-- name: Wait 45 seconds for safety (DNS has to stand up)
-  ansible.builtin.pause:
-    seconds: 45
-
-# If unseal secret doesn't exist
 - name: Register if unseal secret exists
   ansible.builtin.command:
-    cmd: kubectl get secret --namespace='{{ k8sNamespaceName }}' unseal-keys --ignore-not-found
+    cmd: kubectl get secret --namespace='{{ k8sNamespaceName | mandatory }}' unseal-keys --ignore-not-found
   register: unseal_secret_get
   environment:
     KUBECONFIG: "/home/{{user}}/.kube/config"
@@ -48,7 +12,7 @@
 
   - name: Init Vault-0
     ansible.builtin.command:
-      cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName }}' vault-0 -- vault operator init
+      cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName | mandatory }}' hashicorp-vault-0 -- vault operator init
     register: init_output
     environment:
       KUBECONFIG: "/home/{{user}}/.kube/config"
@@ -119,7 +83,7 @@
         kind: Secret
         metadata:
           name: unseal-keys
-          namespace: "{{ k8sNamespaceName }}"
+          namespace: "{{ k8sNamespaceName | mandatory }}"
         type: Opaque
         data:
           unseal1.key: "{{ unseal_key_1.stdout | b64encode}}"
@@ -144,13 +108,3 @@
 
   when:
     - unseal_secret_get.stdout | length == 0 # only do this block when the secret doesn't already exist
-
-- name: Apply Certificate
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{certificateDefinition | mandatory}}"
-
-- name: Apply Ingress
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ingressDefinition | mandatory}}"
