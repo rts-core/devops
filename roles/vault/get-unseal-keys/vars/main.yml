@@ -1,0 +1,3 @@
+---
+# vars file for get-unseal-keys
+k8sNamespaceName: hashicorp-vault

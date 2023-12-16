@@ -1,0 +1,4 @@
+---
+# vars file for ca-create
+secretNamespace: cert-manager
+secretName: nginx-ca-secret

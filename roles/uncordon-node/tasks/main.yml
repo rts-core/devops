@@ -1,0 +1,14 @@
+---
+# tasks file for uncordon-node
+- name: Uncordon Node {{node}}
+  ansible.builtin.command:
+   cmd: kubectl uncordon {{node}}
+  changed_when: true
+  when: runLocal is undefined
+
+- name: Uncordon Node {{node}}
+  ansible.builtin.command:
+   cmd: kubectl uncordon {{node}}
+  changed_when: 
+  delegate_to: localhost
+  when: runLocal is defined

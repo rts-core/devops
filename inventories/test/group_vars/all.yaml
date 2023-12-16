@@ -1,0 +1,31 @@
+# SSH User Data
+user: rts-k8s
+remote_user: rts-k8s
+
+# Cri-O
+crioStableRepoPath: "{{  (inventory_dir + '/yum.repos.d/crio-stable.repo') | replace('inventories', 'configurations') }}" 
+crioRepoPath: "{{  (inventory_dir + '/yum.repos.d/crio.repo') | replace('inventories', 'configurations') }}" 
+crioVersion: 1.28.2
+
+# Kube
+kubeRepoPath: "{{  (inventory_dir + '/yum.repos.d/kubernetes.repo') | replace('inventories', 'configurations') }}"
+kubeVersion: 1.28.4
+
+# Calico
+calicoChartVersion: v3.26.1
+
+# Portmap
+portmapUrl: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz
+
+# Helm
+helmVersion: 3.11.3
+
+# Self signed cert
+selfSignedCertificateName: test
+
+# ArgoCD
+metalLbHelmChartRepo: git@github.com:rts-core/metallb.git
+certManagerHelmChartRepo: git@github.com:rts-core/cert-manager.git
+ingressHelmChartRepo: git@github.com:rts-core/nginx-ingress-internal.git
+argoHelmChartRepo: git@github.com:rts-core/argo-cd.git
+serviceCatalogHelmChartRepo: git@github.com:rts-core/test-service-catalog.git

@@ -1,0 +1,10 @@
+---
+- name: Kubeadm reset
+  ansible.builtin.command:
+   cmd: "kubeadm reset --force"
+  changed_when: true
+  ignore_errors: true
+- name: Remove config dir
+  ansible.builtin.file:
+   path: "/home/{{user}}/.kube"
+   state: absent

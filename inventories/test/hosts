@@ -1,0 +1,11 @@
+k8scontrollers:
+  hosts:
+    roeden-kube-control-01:
+      ansible_host: 12.12.0.142
+
+k8sworkers:
+  hosts:
+    roeden-kube-node-01:
+      ansible_host: 12.12.0.115
+    roeden-kube-node-02:
+      ansible_host: 12.12.0.217

@@ -1,0 +1,37 @@
+---
+# tasks file for k8s-auth
+
+- name: Get Root Key
+  ansible.builtin.shell:
+    cmd: "kubectl get secret unseal-keys -n {{ k8sNamespaceName | mandatory }} -o jsonpath='{.data}' | jq -r '.\"root.token\"' | base64 -d"
+  register: root_token
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Enable K8s Auth
+  ansible.builtin.shell:
+    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName | mandatory }}' hashicorp-vault-0 -- sh -c "vault login {{root_token.stdout}} && vault auth enable kubernetes"
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"
+  ignore_errors: true
+  no_log: true
+
+- name: Get JWT
+  ansible.builtin.shell:
+    cmd: "kubectl get secret --namespace='{{ k8sNamespaceName | mandatory }}' vault-auth -o go-template='{{ '{{' }} .data.token {{ '}}' }}' | base64 --decode"
+  register: vault_auth_jwt
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Get CA cert
+  ansible.builtin.shell:
+    cmd: "kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[].cluster.certificate-authority-data}' | base64 --decode"
+  register: k8s_ca_cert
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Configure K8s Auth (v2)
+  ansible.builtin.shell:
+    cmd: kubectl exec --stdin=true --tty=true --namespace='{{ k8sNamespaceName | mandatory }}' hashicorp-vault-0 -- sh -c "vault login {{root_token.stdout}} && vault write auth/kubernetes/config kubernetes_host=https://kubernetes.default.svc kubernetes_ca_cert='{{k8s_ca_cert.stdout}}' token_reviewer_jwt='{{vault_auth_jwt.stdout}}' disable_local_ca_jwt=true"
+  environment:
+    KUBECONFIG: "/home/{{user}}/.kube/config"

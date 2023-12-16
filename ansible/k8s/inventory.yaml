@@ -1,9 +1,0 @@
-k8scontrollers:
-  hosts:
-    control01:
-      ansible_host: 192.168.56.115
-
-k8sworkers:
-  hosts:
-    worker01:
-      ansible_host: 192.168.56.114

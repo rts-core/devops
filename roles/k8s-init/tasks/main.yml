@@ -1,0 +1,4 @@
+---
+# tasks file for k8s-init
+
+- import_tasks: 01-kubeadmInit.yaml

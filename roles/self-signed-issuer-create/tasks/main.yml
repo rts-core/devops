@@ -1,0 +1,27 @@
+---
+# tasks file for self-signed-issuer-create
+
+- name: Get existing secret object
+  kubernetes.core.k8s_info:
+    api_version: cert-manager.io/v1
+    kind: ClusterIssuer
+    name: "{{ issuerName }}"
+  register: issuer
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Create Issuer
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      api_version: cert-manager.io/v1
+      kind: ClusterIssuer
+      metadata:
+        name: "{{ issuerName }}"
+      spec:
+        ca:
+          secretName: "{{ secretName }}"
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+  when: 
+    - issuer.resources | length == 0

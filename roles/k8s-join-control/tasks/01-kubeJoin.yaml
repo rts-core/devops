@@ -1,0 +1,8 @@
+# todo check if /etc/kubernetes/pki/ca.crt already exists to skip
+
+
+# - name: Join K8s
+#   ansible.builtin.command:
+#    cmd: "{{ hostvars['K8S_JOIN_CONTROL_COMMAND']['cmd'] }} --apiserver-advertise-address={{ ansible_ssh_host }}"
+#    creates: /etc/kubernetes/pki/ca.crt
+#   changed_when: true

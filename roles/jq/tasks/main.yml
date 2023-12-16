@@ -1,0 +1,8 @@
+---
+# tasks file for jq
+- name: Install JQ
+  ansible.builtin.yum:
+    name:
+      - jq
+    disable_excludes: all
+    state: present

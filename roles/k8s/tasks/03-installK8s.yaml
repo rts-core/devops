@@ -1,0 +1,22 @@
+- name: Add K8s Repo and exclude kube apps from update
+  ansible.builtin.copy:
+    dest: '/etc/yum.repos.d/kubernetes.repo'
+    content: |
+        {{kubernetesRepoFileContents | mandatory}}
+    mode: '0644'
+    follow: yes
+  changed_when: true
+
+- name: Install K8s
+  ansible.builtin.yum:
+    name:
+      - "kubelet-{{kubeVersion | mandatory}}"
+      - "kubeadm-{{kubeVersion | mandatory}}"
+      - "kubectl-{{kubeVersion | mandatory}}"
+    disable_excludes: all
+    state: present
+- name: Enable Kubelet service
+  ansible.builtin.systemd:
+    name: kubelet
+    enabled: true
+    state: started

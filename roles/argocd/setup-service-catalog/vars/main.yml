@@ -1,0 +1,4 @@
+---
+# vars file for setup-service-catalog
+
+k8sNamespaceName: argo-cd

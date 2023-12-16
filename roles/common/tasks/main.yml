@@ -1,0 +1,23 @@
+---
+# tasks file for common
+- name: 'Create user account'
+  ansible.builtin.user:
+    name: "{{ user }}"
+    append: true
+    state: present
+    createhome: true
+    groups: wheel
+    shell: /bin/bash
+
+- name: Allow user to use sudo without needing a password
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    line: "{{ user }} ALL=(ALL) NOPASSWD: ALL"
+    validate: 'visudo -cf %s'
+
+- name: Set up authorized keys for the user
+  ansible.posix.authorized_key:
+    user: "{{ user }}"
+    key: "{{ item }}"
+  with_file:
+    - ~/.ssh/id_rsa.pub

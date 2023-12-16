@@ -1,0 +1,71 @@
+---
+# tasks file for get-self-signed-cert
+- name: Get CA Crt Secret
+  ansible.builtin.shell:
+    cmd: "kubectl get secret {{ secretName }} -n {{ secretNamespace }} -o jsonpath='{.data}' | jq -r '.\"tls.crt\"' | base64 -d"
+  register: ca_crt_from_secret
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Get CA Key Secret
+  ansible.builtin.shell:
+    cmd: "kubectl get secret {{ secretName }} -n {{ secretNamespace }} -o jsonpath='{.data}' | jq -r '.\"tls.key\"' | base64 -d"
+  register: ca_key_from_secret
+  environment:
+    KUBECONFIG: "/home/{{user|mandatory}}/.kube/config"
+
+- name: Create crt file
+  ansible.builtin.copy:
+    content: "{{ ca_crt_from_secret.stdout }}"
+    dest: "/home/{{user}}/{{ certificateName | mandatory }}.crt"
+
+- name: Create key file
+  ansible.builtin.copy:
+    content: "{{ ca_key_from_secret.stdout }}"
+    dest: "/home/{{user}}/{{ certificateName | mandatory }}.key"
+
+- name: Fetch files
+  ansible.builtin.fetch:
+    src: /home/{{user}}/{{ item }}
+    dest: ~/fetched
+  loop:
+    - "{{ certificateName | mandatory }}.crt"
+    - "{{ certificateName | mandatory }}.key"
+
+- name: Ensures dir exists
+  delegate_to: localhost
+  file: 
+    path: "~/certs"
+    state: directory
+
+- name: Remove old cert files
+  delegate_to: localhost
+  ansible.builtin.file:
+    path: ~/certs/{{ item }}
+    state: absent
+  loop:
+    - "{{ certificateName | mandatory }}.crt"
+    - "{{ certificateName | mandatory }}.key"
+
+- name: Move the cert files
+  delegate_to: localhost
+  ansible.builtin.shell:
+   cmd: mv ~/fetched/{{ ansible_hostname }}/home/rts-k8s/{{ item }} ~/certs/{{ item }}
+  changed_when: true
+  loop:
+    - "{{ certificateName | mandatory }}.crt"
+    - "{{ certificateName | mandatory }}.key"
+
+- name: Remove fetched directory
+  delegate_to: localhost
+  ansible.builtin.file:
+    path: ~/fetched
+    state: absent
+
+- name: Remove temp cert files
+  ansible.builtin.file:
+    path: /home/{{user}}/{{ item }}
+    state: absent
+  loop:
+    - "{{ certificateName | mandatory }}.crt"
+    - "{{ certificateName | mandatory }}.key"

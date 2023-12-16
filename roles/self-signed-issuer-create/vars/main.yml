@@ -1,0 +1,4 @@
+---
+# vars file for self-signed-issuer-create
+secretName: nginx-ca-secret
+issuerName: nginx-ca-issuer

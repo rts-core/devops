@@ -1,0 +1,33 @@
+# Disable Swap
+- name: Check Security-Enhanced Linux enforced status
+  ansible.builtin.command:
+    cmd: swapon -s
+  register: swapstatus
+  changed_when: false
+- name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+  ansible.builtin.command:
+    cmd: swapoff -a
+  changed_when: true
+  when: swapstatus.stdout != ""
+- name: Disable SWAP since kubernetes can't work with swap enabled (2/2)
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+.*)$'
+    replace: '# \1'
+
+# SE Linux
+- name: Check Security-Enhanced Linux enforced status
+  ansible.builtin.command:
+    cmd: getenforce
+  register: selinuxenfored
+  changed_when: false
+- name: Set Enforce Security-Enhanced Linux to zero
+  ansible.builtin.command:
+    cmd: setenforce 0
+  changed_when: true
+  when: selinuxenfored.stdout == "Enforcing"
+- name: Set Security-Enhanced Linux to permissive
+  ansible.builtin.replace:
+    path: /etc/selinux/config
+    regexp: ^SELINUX=enforcing$
+    replace: SELINUX=permissive
